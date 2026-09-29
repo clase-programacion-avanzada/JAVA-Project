@@ -64,7 +64,7 @@ El proyecto se desarrolla en **iteraciones** que coinciden con los temas del cur
 4. **El equipo implementa la iteración ajustada** y la entrega en la semana indicada.
 
 > [!WARNING]
-> Este proyecto hace parte de su nota final. **Las iteraciones posteriores no se calificarán hasta que se haya completado la anterior.**
+> Este proyecto hace parte de su nota final. Las funcionalidades incompletas de una iteración deberán corregirse, pero no impedirán que el equipo continúe con los conceptos de la siguiente. La corrección de regresiones se evaluará por separado.
 
 [Volver al índice](#índice)
 
@@ -117,7 +117,7 @@ La clase `Hero` tiene dos constructores:
 
 ##### Clase `Fan`
 
-La clase `Fan` representa un fanático registrado en la plataforma de la agencia. Los fanáticos son los usuarios del sistema: siguen a sus héroes favoritos y arman sus propios equipos soñados.
+La clase `Fan` representa un fanático registrado en la plataforma de la agencia. Los fanáticos son los usuarios del sistema: siguen a sus héroes favoritos y a los equipos oficiales creados por la agencia.
 
 ###### Atributos
 
@@ -175,7 +175,7 @@ La clase `Mission` tiene cinco atributos:
 
 2. `codeName`: Este atributo es una cadena que representa el nombre clave de la misión. Por ejemplo: _"Operación Eclipse"_.
 
-3. `threatLevel`: Este atributo es una cadena que representa el nivel de amenaza de la misión. Por ejemplo: _"Baja"_, _"Media"_, _"Alta"_, _"Extinta"_, _"Nivel Omega"_.
+3. `threatLevel`: Este atributo es un entero entre 1 y 10 que representa el nivel de amenaza estimado de la misión. La Agencia Central entregará posteriormente el nivel oficial para la ciudad.
 
 4. `durationInHours`: Este atributo es un entero que representa la duración estimada de la misión en horas.
 
@@ -185,7 +185,7 @@ La clase `Mission` tiene cinco atributos:
 
 La clase `Mission` tendrá dos constructores, de momento se implementará uno de ellos:
 
-1. `public Mission(String codeName, String threatLevel, int durationInHours, String city)`: Este constructor crea un objeto `Mission` con el `codeName`, `threatLevel`, `durationInHours` y `city` proporcionados. El `id` se genera automáticamente.
+1. `public Mission(String codeName, int threatLevel, int durationInHours, String city)`: Este constructor crea un objeto `Mission` con el `codeName`, `threatLevel`, `durationInHours` y `city` proporcionados. El `id` se genera automáticamente.
 
 [Volver al índice](#índice)
 
@@ -237,10 +237,10 @@ classDiagram
     class Mission {
         -UUID id
         -String codeName
-        -String threatLevel
+      -int threatLevel
         -int durationInHours
         -String city
-        +Mission(String codeName, String threatLevel, int durationInHours, String city)
+      +Mission(String codeName, int threatLevel, int durationInHours, String city)
     }
 ```
 
@@ -248,19 +248,15 @@ Como puede darse cuenta, **ninguna de las clases está relacionada entre sí** (
 
 [Volver al índice](#índice)
 
-### Prueba de que mis clases están correctamente definidas
+### Verificación de la entrega
 
-Para verificar que las clases solicitadas están correctamente definidas,
-se debe ejecutar el siguiente comando en la terminal de su IDE:
+Este repositorio contiene el enunciado del proyecto, no un proyecto Gradle ejecutable ni pruebas automáticas. En el proyecto creado por su equipo, verifique antes de entregar que el programa compile y ejecute desde el IDE y desde Gradle, si su equipo configuró el wrapper:
 
 ```bash
 ./gradlew build
 ```
 
-Este comando compilará el proyecto y ejecutará las pruebas definidas en el proyecto.
-Si las clases están correctamente definidas, las pruebas pasarán exitosamente. En caso contrario, se mostrará un mensaje de error, indicándole qué falló.
-
-**El hecho de que las pruebas pasen no garantiza que la implementación esté correcta, solamente que cumple con la estructura solicitada.**
+El comando solo aplica dentro del proyecto Gradle del equipo. Una compilación exitosa no garantiza que las reglas de negocio estén implementadas correctamente; pruebe también cada opción del menú.
 
 ### Calificación de la iteración 1
 
@@ -277,8 +273,8 @@ El programa debe compilar y ejecutar sin errores. Se debe cumplir con los siguie
 6. La clase `Main` debe permitir crear cada uno de los objetos por medio de un menú e imprimirlo en pantalla. (1.0)
 
 > [!WARNING]
-> **Este proyecto es acumulativo. Las posteriores iteraciones no se calificarán hasta que se haya completado esta.
-> Si todo está correcto, sumará 0.5 a su proyecto final.
+> **Este proyecto es acumulativo. Los defectos de esta iteración deben corregirse para evitar regresiones, pero el equipo podrá continuar trabajando en la siguiente.
+> Esta iteración aporta 0.5 puntos al proyecto final.
 > Esta iteración debe ser entregada durante la semana 9.**
 
 [Volver al índice](#índice)
@@ -296,10 +292,10 @@ dependencies {
 }
 ```
 
-El profesor le entregará a cada equipo una **clave de acceso única**. La clave identifica a su equipo ante la Agencia Central y **nunca debe escribirse en el código fuente**: la librería la lee de la variable de entorno `HERO_INTEL_API_KEY`.
+El profesor le entregará a cada equipo un **token de acceso único, revocable y temporal**. El token identifica al equipo ante la Agencia Central y **nunca debe escribirse en el código fuente**: la librería lo lee de la variable de entorno `HERO_INTEL_TOKEN`.
 
-- Cada equipo recibirá su propia clave. **No la comparta con otros equipos ni la suba a repositorios públicos.**
-- Si la Agencia detecta un uso indebido de una clave, la clave será revocada y el equipo deberá justificar el incidente ante la dirección (el profesor).
+- Cada equipo recibirá su propio token. **No lo comparta, no lo incluya en capturas de pantalla ni lo suba a ningún repositorio.**
+- Si la Agencia detecta un uso indebido o una filtración, el token será revocado y reemplazado por el profesor.
 
 Una vez configurada la variable de entorno, la librería se usa de la siguiente manera:
 
@@ -310,7 +306,7 @@ IntelService intel = IntelService.create();
 int threat = intel.getCityThreatLevel("Metrópolis");
 
 // Actividad villanesca reciente en una ciudad
-List<String> villainActivity = intel.getVillainActivity("Metrópolis");
+List<VillainIntel> villainActivity = intel.getVillainActivity("Metrópolis");
 ```
 
 **La guía completa de instalación y configuración** (Windows y macOS, paso a paso, con solución de errores) está en [docs/hero-intel.md](docs/hero-intel.md).
@@ -328,15 +324,15 @@ Estas son las iteraciones del proyecto y los temas del curso con los que coincid
 | 1 | Primeros pasos en Java: clases, atributos, constructores y métodos | _Definida en este README_ | — | Semana 9 | 0.5 |
 | 2 | Relaciones entre clases y principio de responsabilidad única | Lunes de la semana 10 | Miércoles de la semana 10 | Semana 11 | 1.0 |
 | 3 | Strings & Excepciones | Lunes de la semana 11 | Miércoles de la semana 11 | Semana 12 (módulo del fanático) y semana 13 (excepciones) | 0.5 + 0.5 |
-| 4 | Maps, Sets, archivos de texto y binarios | Lunes de la semana 13 | Miércoles de la semana 13 | Semana 14 | 2.0 |
-| 5 | Herencia y polimorfismo | Lunes de la semana 15 | Miércoles de la semana 15 | Antes de la semana 18 | 2.0 |
+| 4 | Maps, Sets, archivos de texto y binarios | Lunes de la semana 14 | Miércoles de la semana 14 | Semana 15 | 1.5 |
+| 5 | Herencia, polimorfismo y despacho de misiones | Lunes de la semana 16 | Miércoles de la semana 16 | Final de la semana 18 | 2.5 |
 
 Algunas preguntas que las próximas iteraciones deberán responder (y que ustedes deberán proponer cómo resolver):
 
 - **Iteración 2:** ¿Cómo se relacionan héroes, misiones, equipos y fanáticos? ¿Quién es responsable de crear, eliminar y listar cada entidad? ¿Qué pasa con las misiones de un héroe cuando el héroe se retira (es eliminado)? ¿Dónde vive la lista centralizada de cada entidad? ¿Quién imprime en consola y quién no?
-- **Iteración 3:** ¿Cómo se autentica un fanático en la plataforma? ¿Qué validaciones aplican al nombre de usuario, la contraseña y la edad? ¿Qué excepciones propias necesita HeroHub y con qué mensajes exactos? ¿Qué operaciones puede hacer un fanático (seguir héroes y equipos, ver las misiones en curso) y qué operaciones son exclusivas del administrador (armar equipos y despachar misiones)? ¿Qué le dice la Agencia Central a la agencia al momento de registrar una misión?
-- **Iteración 4:** ¿Cómo se guarda y se carga el estado del sistema en archivos de texto? ¿Y en binario? ¿Qué estructura tendrán los archivos? ¿Qué estadísticas describen a un héroe (combate, intelecto, vigor, carisma, movilidad) y cómo llegan al sistema? ¿Qué reportes le sirven a la agencia (por ejemplo: el héroe más seguido, el fanático más fiel, la ciudad más peligrosa según la Agencia Central) y con qué formato se entregan?
-- **Iteración 5:** ¿Todos los héroes son iguales? ¿Se comporta igual un novato recién reclutado que una leyenda de la agencia cuando se les despacha a una misión peligrosa? ¿Cómo se ganan experiencia y niveles, y en qué se gastan los puntos de habilidad? ¿Qué pasa cuando la misión termina: cuándo se sabe si se ganó, quién salió ileso, quién quedó herido (y qué pasa si un herido vuelve a salir herido)… y quién no volvió? ¿Qué son las parejas con sinergia y por qué los fanáticos las aman? ¿Qué pasa cuando dos llamadas compiten y solo se puede atender una? ¿Y los villanos que reporta la Agencia Central: dónde viven en el sistema si el administrador no puede crearlos? ¿Qué jerarquía de clases justifica ese nuevo mundo? ¿Cómo se mantiene funcionando todo lo anterior, incluidos los archivos y los reportes?
+- **Iteración 3:** ¿Cómo se autentica un fanático en la plataforma? ¿Qué validaciones aplican al nombre de usuario, la contraseña y la edad? ¿Qué excepciones propias necesita HeroHub y con qué mensajes exactos? ¿Qué operaciones puede hacer un fanático y cuáles son exclusivas del administrador? ¿Qué le dice la Agencia Central a la agencia al momento de registrar una misión?
+- **Iteración 4:** ¿Cómo se importan los datos iniciales desde archivos de texto? ¿Cómo se guarda y se reanuda el estado actual en binario? ¿Qué estructura tendrán los archivos? ¿Qué estadísticas describen a un héroe? ¿Cómo se reconstruyen relaciones por id y se generan reportes útiles?
+- **Iteración 5:** ¿Cómo cambia el comportamiento de un héroe según su rango? ¿Cómo se despacha un equipo mediante la Agencia Central? ¿Cómo se ganan experiencia, niveles y puntos de habilidad? ¿Qué ocurre con lesiones, descansos y muertes? ¿Cómo funcionan la sinergia, los ascensos, los villanos y la progresión del despachador? ¿Cómo se reanuda una partida sin aplicar dos veces el mismo desenlace?
 
 [Volver al índice](#índice)
 
@@ -353,6 +349,8 @@ El proyecto suma en total **6.5 puntos** distribuidos en las iteraciones de la h
 Los requerimientos funcionales los validará el cliente (monitor), mientras que el código y las decisiones de diseño los revisará el profesor.
 
 Aunque los requerimientos se cumplan, el profesor puede indicarle cambios que debe hacer en el código, que serán evaluados en la siguiente iteración.
+
+Si una entrega queda incompleta, el profesor indicará el conjunto mínimo de correcciones o una base compatible para que el equipo pueda continuar. Las nuevas competencias de la siguiente iteración sí se evaluarán; las regresiones pendientes se registrarán como un criterio independiente.
 
 [Volver al índice](#índice)
 

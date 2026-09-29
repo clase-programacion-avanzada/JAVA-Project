@@ -1,180 +1,223 @@
 # Librería oficial de la Agencia Central: `hero-intel`
 
-`hero-intel` es la librería oficial de Java mediante la cual la **Agencia Central** comparte información actualizada con los sistemas de HeroHub: el nivel de amenaza oficial de una ciudad y la actividad villanesca reciente.
+`hero-intel` permite que HeroHub consulte información oficial y, desde la versión 1.1.0, despache misiones para que la Agencia Central determine su duración y desenlace.
 
-> **Confidencial:** la clave de acceso identifica a su equipo ante la Agencia Central. No la comparta con otros equipos ni la suba a repositorios públicos. Si la Agencia detecta un uso indebido, la clave será revocada.
+La librería es la única interfaz que deben usar los estudiantes. No deben realizar peticiones HTTP directamente ni conocer la dirección del servidor.
 
 ## Índice
 
-1. [Agregar la librería al proyecto](#agregar-la-librería-al-proyecto)
-2. [Configurar la clave de acceso](#configurar-la-clave-de-acceso)
-    - [Windows](#windows)
-    - [macOS](#macos)
-    - [Verificar la configuración](#verificar-la-configuración)
-3. [Uso de la librería](#uso-de-la-librería)
-4. [Errores y manejo de excepciones](#errores-y-manejo-de-excepciones)
-5. [Reglas de la Agencia](#reglas-de-la-agencia)
+1. [Agregar la librería](#agregar-la-librería)
+2. [Token de acceso](#token-de-acceso)
+3. [Configurar el token](#configurar-el-token)
+4. [API 1.0.0](#api-100-informes)
+5. [API 1.1.0](#api-110-despacho-de-misiones)
+6. [Errores](#errores)
+7. [Reglas de seguridad](#reglas-de-seguridad)
 
-## Agregar la librería al proyecto
+## Agregar la librería
 
-1. Descargue el archivo `hero-intel-1.0.0.jar` que el profesor publicará.
-2. Cree una carpeta llamada `libs` en la raíz de su proyecto (al mismo nivel de `build.gradle`) y copie el archivo allí.
-3. Agregue la dependencia en el archivo `build.gradle`:
+1. Descargue el `.jar` publicado por el profesor.
+2. Cópielo en `libs/`, al mismo nivel de `build.gradle`.
+3. Agregue la versión entregada:
 
 ```gradle
 dependencies {
-    implementation files('libs/hero-intel-1.0.0.jar')
-    // ... resto de dependencias
+    implementation files('libs/hero-intel-1.1.0.jar')
 }
 ```
 
-4. Sincronice el proyecto con Gradle (en IntelliJ: el botón del elefante 🐘, o _Reload All Gradle Projects_).
+La versión 1.1.0 conserva las operaciones públicas de 1.0.0 y agrega el despacho de misiones.
 
-[Volver al índice](#índice)
+## Token de acceso
 
-## Configurar la clave de acceso
+Cada equipo recibe por un canal privado un **token opaco, único, revocable y temporal**. El servidor usa el token para autenticar al equipo y separar su mundo de juego: villanos activos, capturas y despachos.
 
-La librería lee la clave de la **variable de entorno** `HERO_INTEL_API_KEY`. Así, la clave nunca aparece en su código fuente. El profesor le entregará la clave de su equipo en privado.
+El token funciona como una contraseña:
+
+- Solo los integrantes del equipo deben conocerlo.
+- No se escribe en código, archivos de configuración, entregas ni capturas de pantalla.
+- No se incluye en URLs, parámetros ni mensajes de error.
+- No se sube a Git, incluso si el repositorio es privado.
+- Expira al terminar el curso y el profesor puede revocarlo o rotarlo.
+
+La librería lee `HERO_INTEL_TOKEN` y envía internamente el encabezado `Authorization: Bearer <token>` exclusivamente mediante HTTPS. El programa del estudiante nunca recibe ni pasa el token como argumento.
+
+> [!IMPORTANT]
+> Quien posea el token puede usar la identidad del equipo. Si sospecha una filtración, informe inmediatamente al profesor para revocarlo y recibir uno nuevo.
+
+## Configurar el token
 
 ### Windows
 
-1. Abra una terminal (`cmd`) y ejecute:
+En `cmd`:
 
-    ```
-    setx HERO_INTEL_API_KEY "la-clave-de-su-equipo"
-    ```
+```bat
+setx HERO_INTEL_TOKEN "token-entregado-por-el-profesor"
+```
 
-2. **Cierre y vuelva a abrir IntelliJ** (y cualquier terminal que tenga abierta): las variables definidas con `setx` solo aplican a programas abiertos después del comando.
+Cierre y vuelva a abrir el IDE y las terminales. Para comprobar que existe sin imprimirlo:
 
-También puede hacerlo desde _Configuración → Sistema → Acerca de → Configuración avanzada del sistema → Variables de entorno… → Nueva…_ con nombre `HERO_INTEL_API_KEY` y el valor de su clave.
+```bat
+if defined HERO_INTEL_TOKEN (echo Token configurado) else (echo Token ausente)
+```
 
-### macOS
+### macOS y Linux
 
-1. Abra la aplicación Terminal y ejecute:
+Si usa zsh:
 
-    ```bash
-    echo 'export HERO_INTEL_API_KEY="la-clave-de-su-equipo"' >> ~/.zshrc
-    ```
+```bash
+echo 'export HERO_INTEL_TOKEN="token-entregado-por-el-profesor"' >> ~/.zshrc
+source ~/.zshrc
+```
 
-2. Recargue la configuración:
+Si usa bash, reemplace `~/.zshrc` por `~/.bashrc`. Compruebe la configuración sin mostrar el token:
 
-    ```bash
-    source ~/.zshrc
-    ```
+```bash
+[[ -n "$HERO_INTEL_TOKEN" ]] && echo "Token configurado" || echo "Token ausente"
+```
 
-3. Si abre IntelliJ desde el _Dock_, ciérrelo y ábralo de nuevo para que tome la nueva variable. (Alternativa: abrir IntelliJ desde la terminal con `open -a "IntelliJ IDEA"`).
+### Configuración del IDE
 
-> **Alternativa para ambos sistemas (útil para pruebas):** en IntelliJ, _Run → Edit Configurations… → su configuración de ejecución → Environment variables_ y agregue `HERO_INTEL_API_KEY=la-clave-de-su-equipo`. Esto aplica solo a esa configuración de ejecución.
+Como alternativa, agregue `HERO_INTEL_TOKEN` a las variables de entorno de la configuración de ejecución. No la guarde en un archivo compartido del proyecto.
 
-### Verificar la configuración
+## API 1.0.0: informes
 
-- Windows (`cmd`): `echo %HERO_INTEL_API_KEY%`
-- macOS (Terminal): `echo $HERO_INTEL_API_KEY`
-
-Debe imprimir su clave. Si imprime vacío (o la variable literal en Windows), repita los pasos y recuerde reiniciar el IDE.
-
-[Volver al índice](#índice)
-
-## Uso de la librería
-
-La clase principal es `com.javeriana.herointel.IntelService`. Se obtiene una instancia con el método de fábrica `create()`, que lee la clave de la variable de entorno:
+La clase principal es `io.github.dmorav1.herointel.IntelService`:
 
 ```java
-import com.javeriana.herointel.IntelService;
+IntelService intel = IntelService.create();
 
-public class Main {
-    public static void main(String[] args) {
-        IntelService intel = IntelService.create();
+int threat = intel.getCityThreatLevel("Metrópolis");
 
-        // Nivel de amenaza oficial de una ciudad (entero de 1 a 10)
-        int threat = intel.getCityThreatLevel("Metrópolis");
-        System.out.println("Amenaza oficial: " + threat);
-
-        // Actividad villanesca reciente en una ciudad
-        for (String villain : intel.getVillainActivity("Metrópolis")) {
-            System.out.println("Villano reportado: " + villain);
-        }
-    }
+for (VillainIntel villain : intel.getVillainActivity("Metrópolis")) {
+    System.out.println(villain.getName() + " - " + villain.getCity());
 }
 ```
 
 | Método | Retorna | Descripción |
 |--------|---------|-------------|
-| `IntelService.create()` | `IntelService` | Crea el servicio leyendo `HERO_INTEL_API_KEY`. Lanza `IntelAccessException` si la variable no está definida. |
-| `getCityThreatLevel(String city)` | `int` | Nivel de amenaza oficial de la ciudad (1–10). |
-| `getVillainActivity(String city)` | `List<String>` | Villanos activos reportados en la ciudad (lista vacía si no hay reportes). |
+| `IntelService.create()` | `IntelService` | Lee `HERO_INTEL_TOKEN`. Falla si está ausente, vacío, vencido o revocado. |
+| `getCityThreatLevel(String city)` | `int` | Amenaza oficial base de la ciudad, entre 1 y 10. |
+| `getVillainActivity(String city)` | `List<VillainIntel>` | Villanos activos para el equipo en esa ciudad. Los capturados dejan de aparecer. |
 
-Ustedes no necesitan saber _cómo_ la librería obtiene la información: es un asunto clasificado de la Agencia Central. Lo importante es decidir **dónde tiene sentido usarla** en el sistema y **manejar sus errores correctamente**.
+`VillainIntel` es inmutable y expone:
 
-### Versión 1.1.0: la Agencia simula misiones
+- `UUID getId()`.
+- `String getName()`.
+- `String getCity()`.
 
-Durante el semestre, la Agencia Central publicará la versión **1.1.0** del `.jar` con dos nuevas operaciones. Para actualizar, reemplace el archivo en `libs/` y ajuste la versión en su `build.gradle`:
+Los UUID de villano son estables. El mismo villano conserva su identidad entre consultas.
+
+## API 1.1.0: despacho de misiones
+
+### Perfiles
 
 ```java
-import com.javeriana.herointel.*;
+HeroProfile profile = new HeroProfile(
+    hero.getId(),
+    hero.getName(),
+    Rank.VETERAN,
+    hero.getEffectiveCombat(),
+    hero.getEffectiveIntellect(),
+    hero.getEffectiveVigor(),
+    hero.getEffectiveCharisma(),
+    hero.getEffectiveMobility()
+);
 ```
 
-| Método / tipo | Descripción |
-|---------------|-------------|
-| `dispatchMission(String city, List<HeroProfile> squad, int synergyBonus)` | Despacha un escuadrón a una ciudad. `synergyBonus` es el bono de sinergia del escuadrón (0–15). Retorna un `MissionDispatch` con el `dispatchId` y la hora exacta de finalización (`getCompletesAt()`). |
-| `getMissionOutcome(String dispatchId)` | Retorna el `MissionOutcome` de la misión: si fue ganada (`isSuccess()`) y el resultado de cada héroe (`getHeroOutcomes()`). **Si la misión aún está en curso, lanza `IntelAccessException`** — la paciencia también es una virtud heroica. |
-| `HeroProfile(name, rank, combat, intellect, vigor, charisma, mobility)` | El perfil de un héroe al despacharlo. `rank` es el enum `Rank` (`ROOKIE`, `VETERAN`, `ELITE`) y cada una de las cinco estadísticas va de 1 a 10. |
-| `HeroOutcome` | Resultado de un héroe: `getStatus()` retorna `UNHARMED` (ileso), `INJURED` (herido, con `getRecoverySeconds()` segundos de recuperación) o `DECEASED` (caído en el deber 🕯️). |
+`Rank` admite `ROOKIE`, `VETERAN` y `ELITE`. Corresponden a `RookieHero`, `VeteranHero` y `EliteHero` del proyecto. Las estadísticas efectivas deben estar entre 1 y 10.
+
+### Despachar
 
 ```java
-IntelService intel = IntelService.create();
-
-List<HeroProfile> squad = List.of(
-    new HeroProfile("Capitán Trueno", Rank.VETERAN, 8, 5, 7, 4, 6),
-    new HeroProfile("Centella", Rank.ROOKIE, 4, 6, 5, 7, 9)
+MissionDispatch dispatch = intel.dispatchMission(
+    mission.getId(),
+    mission.getCity(),
+    profiles,
+    synergyBonus
 );
 
-MissionDispatch dispatch = intel.dispatchMission("Metrópolis", squad, 10);
-System.out.println("La misión terminará a las: " + dispatch.getCompletesAt());
+System.out.println("Amenaza efectiva: " + dispatch.getEffectiveThreatLevel());
+System.out.println("Finaliza: " + dispatch.getCompletesAt());
+```
 
-// ... cuando ya haya pasado la hora de finalización ...
+La firma pública es:
+
+```java
+MissionDispatch dispatchMission(
+    UUID missionId,
+    String city,
+    List<HeroProfile> squad,
+    int synergyBonus
+);
+```
+
+La Agencia Central calcula la amenaza efectiva, duración y desenlace. `MissionDispatch` expone:
+
+- `UUID getDispatchId()`.
+- `UUID getMissionId()`.
+- `int getEffectiveThreatLevel()`.
+- `Instant getCompletesAt()`.
+
+El despacho es **idempotente** por equipo y `missionId`. Si la respuesta se pierde, repetir exactamente la misma solicitud devuelve el despacho existente. Reutilizar el mismo `missionId` con datos diferentes produce un error.
+
+### Consultar el desenlace
+
+```java
 MissionOutcome outcome = intel.getMissionOutcome(dispatch.getDispatchId());
-System.out.println(outcome.isSuccess() ? "¡Misión cumplida!" : "Misión fallida...");
-outcome.getHeroOutcomes().forEach((hero, result) ->
-    System.out.println(hero + " -> " + result.getStatus())
-);
-```
 
-La Agencia Central decide los desenlaces con criterios que no siempre coinciden con las estimaciones locales de la agencia. Esa es la gracia: **planifique bien sus escuadrones**.
+if (outcome.isSuccess()) {
+    System.out.println("Misión cumplida");
+}
 
-[Volver al índice](#índice)
-
-## Errores y manejo de excepciones
-
-Todas las fallas de la librería se reportan con la excepción `com.javeriana.herointel.IntelAccessException`. **Su programa nunca debe terminar abruptamente por causa de la Agencia Central**: capture la excepción y muestre un mensaje amigable.
-
-```java
-import com.javeriana.herointel.IntelAccessException;
-import com.javeriana.herointel.IntelService;
-
-try {
-    IntelService intel = IntelService.create();
-    int threat = intel.getCityThreatLevel("Metrópolis");
-    System.out.println("Amenaza oficial: " + threat);
-} catch (IntelAccessException e) {
-    System.out.println("No se pudo consultar el informe de la Agencia Central");
+for (Map.Entry<UUID, HeroOutcome> entry : outcome.getHeroOutcomes().entrySet()) {
+    System.out.println(entry.getKey() + " -> " + entry.getValue().getStatus());
 }
 ```
 
-| Situación | Causa probable | Qué hacer |
-|-----------|----------------|-----------|
-| `IntelAccessException` al llamar `create()` | La variable `HERO_INTEL_API_KEY` no está definida | Repita la [configuración](#configurar-la-clave-de-acceso) y reinicie el IDE |
-| `IntelAccessException`: clave rechazada | La clave es incorrecta o fue revocada | Verifique que copió la clave completa; si persiste, hable con el profesor |
-| `IntelAccessException`: Agencia saturada | Demasiadas consultas seguidas | Espere unos segundos y reintente; no consulte en ciclos innecesarios |
-| `IntelAccessException`: no se pudo contactar | Problema de red o la Agencia no está disponible | Verifique su conexión; su programa debe seguir funcionando sin el informe |
-| `IntelAccessException`: la misión sigue en curso | Consultó el desenlace antes de la hora de finalización | Espere a que pase la hora indicada por `getCompletesAt()` y reintente |
+`MissionOutcome` expone:
 
-[Volver al índice](#índice)
+- `UUID getOutcomeId()`.
+- `UUID getDispatchId()`.
+- `boolean isSuccess()`.
+- `Map<UUID, HeroOutcome> getHeroOutcomes()`.
+- `Optional<VillainIntel> getCapturedVillain()`.
 
-## Reglas de la Agencia
+`HeroOutcome` expone `getStatus()` (`UNHARMED`, `INJURED` o `DECEASED`) y `getRecoverySeconds()`. La duración entregada corresponde a una lesión reportada por la Agencia; HeroHub decide localmente cuándo una segunda lesión pasa a `OUT_OF_SERVICE`. Los resultados se relacionan por UUID de héroe, nunca por nombre.
 
-1. Una clave por equipo. **No la comparta ni la publique** (ni siquiera en su repositorio: si usa git, la clave nunca debe estar en el código — por eso se usa una variable de entorno).
-2. Consulte a la Agencia solo cuando el informe sea necesario; no haga consultas en ciclos repetitivos.
-3. La Agencia Central lleva registro de las interacciones con sus sistemas de información. Comportamientos anómalos serán investigados. 🕵️
+Consultar antes de `completesAt` produce `IntelAccessException`. Una vez disponible, el mismo `dispatchId` siempre retorna el mismo `outcomeId` y desenlace. La aplicación debe guardar si ya lo aplicó para no duplicar recompensas o consecuencias.
 
-[Volver al índice](#índice)
+### Autoridad de la Agencia Central
+
+El servidor conserva por equipo:
+
+- Villanos activos y capturados.
+- Misiones despachadas.
+- Hora de finalización.
+- Desenlace definitivo.
+
+En una victoria puede capturarse un villano activo de la ciudad. El villano aparece en `getCapturedVillain()` y deja de aparecer en consultas posteriores. El cliente no elimina villanos directamente.
+
+## Errores
+
+Todas las fallas se reportan como `IntelAccessException`. El menú nunca debe terminar abruptamente por una falla externa.
+
+| Situación | Significado | Acción |
+|-----------|-------------|--------|
+| Token ausente | `HERO_INTEL_TOKEN` no está configurado | Configure la variable y reinicie el IDE. |
+| `401` | Token inválido, vencido o revocado | Solicite revisión o rotación al profesor. |
+| `403` | El token no tiene permiso para la operación | No reintente; informe al profesor. |
+| `409` | Misión repetida con datos diferentes o desenlace aún no disponible | Corrija la solicitud o espere hasta `completesAt`. |
+| `429` | Se superó el límite por token | Espere antes de reintentar; no consulte en ciclos. |
+| Error de red | La Agencia Central no está disponible | Conserve el estado local y permita continuar usando otras opciones. |
+
+Los mensajes y logs nunca incluyen el token completo.
+
+## Reglas de seguridad
+
+1. Use únicamente `IntelService.create()`; no pida ni reciba el token dentro del programa.
+2. No imprima variables de entorno ni adjunte el token al solicitar ayuda.
+3. No comparta el token con otros equipos.
+4. No automatice consultas repetitivas. El servidor aplica límites por token.
+5. Ante una filtración, deje de usar el token y solicite su revocación.
+6. El profesor administra las operaciones de reinicio y datos de prueba con credenciales diferentes, que nunca se distribuyen con la librería.
