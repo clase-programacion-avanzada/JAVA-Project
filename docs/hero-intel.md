@@ -154,7 +154,120 @@ MissionDispatch dispatchMission(
 
 La Agencia Central calcula la amenaza efectiva, duración y desenlace. `MissionDispatch` expone:
 
-- `UUID getDispatchId()`.
+- `UUID getDispatchId()`: identificador del despacho. Es el que se usa para consultar el desenlace.
+- `UUID getMissionId()`: el mismo UUID de misión que se envió.
+- `int getEffectiveThreatLevel()`: amenaza oficial de la ciudad más los villanos activos, con tope 10.
+- `Instant getCompletesAt()`: momento a partir del cual se puede resolver la misión.
+
+La misión dura la amenaza efectiva por 30 segundos. Una amenaza efectiva de 8 tarda 240 segundos.
+
+### Idempotencia del despacho
+
+Despachar es idempotente por misión. Repetir la llamada con el mismo `missionId` y los mismos datos devuelve el despacho existente, con el mismo `dispatchId` y la misma hora de finalización. El orden de los héroes dentro del escuadrón no cuenta como un cambio.
+
+Si se repite el mismo `missionId` con datos diferentes, la llamada falla con el mensaje _"La misión ya fue despachada con datos diferentes"_. Una misión ya despachada no se puede modificar: use un `missionId` nuevo.
+
+Gracias a esto, reintentar después de un error de red no crea dos misiones ni duplica capturas.
+
+### Resolver
+
+```java
+MissionOutcome outcome = intel.getMissionOutcome(dispatch.getDispatchId());
+
+if (outcome.isSuccess()) {
+    System.out.println("Misión cumplida");
+}
+
+outcome.getCapturedVillain().ifPresent(villain ->
+    System.out.println("Villano capturado: " + villain.getName()));
+```
+
+Consultar antes de `getCompletesAt()` falla con el mensaje _"La misión sigue en curso"_ y no cambia nada. Consultar después devuelve siempre el mismo desenlace, sin importar cuántas veces se pregunte.
+
+`MissionOutcome` expone:
+
+- `UUID getOutcomeId()`: identificador del desenlace. Sirve para registrar localmente si ya se aplicó.
+- `UUID getDispatchId()`: el despacho al que corresponde.
+- `boolean isSuccess()`: si la misión se ganó.
+- `Map<UUID, HeroOutcome> getHeroOutcomes()`: resultado de cada héroe, indexado por su UUID. El mapa es inmutable.
+- `Optional<VillainIntel> getCapturedVillain()`: villano capturado, si lo hubo.
+
+Los resultados se aplican **por UUID, nunca por nombre**. Dos héroes pueden llamarse igual.
+
+### Resultado de cada héroe
+
+`HeroOutcome` expone:
+
+- `HeroStatus getStatus()`.
+- `long getRecoverySeconds()`.
+
+`HeroStatus` admite tres valores:
+
+| Estado | Significado | `getRecoverySeconds()` |
+|--------|-------------|------------------------|
+| `UNHARMED` | El héroe salió ileso | `0` |
+| `INJURED` | El héroe resultó herido | Entre 60 y 300 |
+| `DECEASED` | El héroe murió en la misión | `0` |
+
+Un escuadrón que gana con holgura rara vez sufre bajas. Una derrota aumenta la probabilidad de heridas y muerte, y los Novatos mueren con el doble de frecuencia que los demás rangos.
+
+### Capturas
+
+Cuando se gana una misión y quedan villanos activos en la ciudad, la Agencia Central captura uno y lo reporta en `getCapturedVillain()`. Ese villano deja de aparecer en `getVillainActivity(city)` desde ese momento.
+
+La captura ocurre al **resolver** la misión, no al despacharla: mientras la misión está en curso, la lista de villanos activos no cambia.
+
+## Errores
+
+Todas las fallas de la librería son `IntelAccessException`, una excepción no verificada. Basta con capturar ese tipo:
+
+```java
+try {
+    MissionDispatch dispatch = intel.dispatchMission(missionId, city, profiles, synergyBonus);
+} catch (IntelAccessException e) {
+    System.out.println("No se pudo despachar la misión: " + e.getMessage());
+}
+```
+
+### Errores detectados antes de llamar a la Agencia
+
+La librería valida los datos localmente y no gasta una llamada de red si algo está mal:
+
+| Mensaje | Causa |
+|---------|-------|
+| `La variable de entorno HERO_INTEL_TOKEN no está configurada...` | Falta el token; configúrelo y reinicie el IDE |
+| `La ciudad no puede estar vacía` | Ciudad nula, vacía o en blanco |
+| `El escuadrón debe tener entre 1 y 8 héroes` | Escuadrón vacío o de más de 8 |
+| `El escuadrón repite al héroe <uuid>` | El mismo UUID aparece dos veces |
+| `La sinergia debe estar entre 0 y 15` | Bono de sinergia fuera de rango |
+| `La estadística de <nombre> debe estar entre 1 y 10` | Estadística efectiva fuera de rango |
+| `El héroe necesita un identificador` / `un nombre` / `un rango` | Falta un dato obligatorio del perfil |
+
+### Errores reportados por la Agencia
+
+| Mensaje | Qué hacer |
+|---------|-----------|
+| `La misión sigue en curso` | Esperar hasta `getCompletesAt()` |
+| `La misión ya fue despachada con datos diferentes` | Usar un `missionId` nuevo o reenviar los mismos datos |
+| `El token del equipo es inválido, está vencido o fue revocado: ...` | Pedir un token nuevo al profesor |
+| `La Agencia Central no reconoce el recurso consultado: ...` | Ciudad inexistente o despacho que no pertenece al equipo |
+| `La Agencia Central rechazó los datos enviados: ...` | Revisar el cuerpo de la solicitud |
+| `No fue posible contactar a la Agencia Central` | Sin red o servidor caído; no cambie ningún estado local |
+| `Se superó el límite de consultas del equipo...` | Esperar los segundos indicados antes de reintentar |
+
+> [!IMPORTANT]
+> Si la Agencia Central no está disponible al despachar, **no** marque la misión como iniciada ni los héroes como desplegados. El estado local solo cambia cuando la llamada devuelve un `MissionDispatch`.
+
+## Reglas de seguridad
+
+1. Use únicamente la librería. No haga peticiones HTTP a la Agencia Central ni intente averiguar su dirección.
+2. No escriba el token en el código, en archivos de configuración del proyecto, en capturas de pantalla ni en la entrega.
+3. No suba el token a Git, aunque el repositorio sea privado. Agregue a `.gitignore` cualquier archivo local donde lo guarde.
+4. No incluya el token en URLs, parámetros, logs ni mensajes de error. La librería nunca lo expone de vuelta.
+5. No comparta el token con otros equipos ni use el de otro equipo. Cada mundo de juego está aislado por token.
+6. Informe de inmediato al profesor si sospecha que el token se filtró, para revocarlo y emitir uno nuevo.
+7. La Agencia Central es la autoridad sobre villanos activos, capturas y desenlaces. El proyecto guarda lo que ya observó, pero no inventa ni corrige esos datos.
+8. Registre localmente qué desenlaces ya aplicó. Volver a consultar, recargar una partida o reintentar tras un error no puede duplicar experiencia, lesiones, muertes ni capturas.
 - `UUID getMissionId()`.
 - `int getEffectiveThreatLevel()`.
 - `Instant getCompletesAt()`.
