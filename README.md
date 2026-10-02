@@ -33,6 +33,7 @@ A diferencia de los talleres del curso, este proyecto **no tiene una especificac
     - [Diagrama de clases inicial](#diagrama-de-clases-inicial)
     - [Prueba de que mis clases están correctamente definidas](#prueba-de-que-mis-clases-están-correctamente-definidas)
     - [Calificación de la iteración 1](#calificación-de-la-iteración-1)
+  - [Iteración 2 - Proyecto base](#iteración-2---proyecto-base)
   - [Hoja de ruta del proyecto](#hoja-de-ruta-del-proyecto)
   - [Calificación general](#calificación-general)
   - [Preguntas frecuentes (FAQs)](#preguntas-frecuentes-faqs)
@@ -276,6 +277,31 @@ El programa debe compilar y ejecutar sin errores. Se debe cumplir con los siguie
 > **Este proyecto es acumulativo. Los defectos de esta iteración deben corregirse para evitar regresiones, pero el equipo podrá continuar trabajando en la siguiente.
 > Esta iteración aporta 0.5 puntos al proyecto final.
 > Esta iteración debe ser entregada durante la semana 9.**
+
+[Volver al índice](#índice)
+
+## Iteración 2 - Proyecto base
+
+Esta rama (`iteration-2-starter`) contiene el código base de la iteración 2. Se publica en el taller del miércoles de la semana 10, después de recibir las propuestas del lunes. Si la propuesta de su equipo es diferente y fue aprobada, puede adaptarlo.
+
+Qué incluye:
+
+- El proyecto Gradle (Java 25) con las clases `model` de la iteración 1, **todavía sin relaciones entre ellas**.
+- Las capas `service`, `controller` y `view` ya conectadas desde `Main`: `MainView` (menú de módulos) y `AdminView` (menú completo del módulo administrador).
+- El **fanático funcionando de punta a punta** como ejemplo: registrar (opción 5), eliminar (opción 6) y listar (opción 13). Recorra `AdminView` → `AdminController` → `FanService` → `Fan` antes de empezar.
+- `HeroService`, `TeamService` y `MissionService` vacíos. Las demás opciones del menú muestran _"Opción pendiente"_.
+
+Qué deben construir:
+
+| Parte | Dónde | Contenido |
+|---|---|---|
+| 1 | Taller en clase, miércoles de la semana 10 | Héroes: registrar, retirar y listar (opciones 1, 2 y 15). Se entrega al final del taller. |
+| 2 | En casa, entrega el miércoles de la semana 11 | Equipos (opciones 7, 8, 9, 10 y 16), misiones (opciones 3, 4, 11, 12 y 14), las relaciones que faltan en el modelo, las reglas de borrado en cascada y el diagrama de clases completo del proyecto. |
+
+> [!IMPORTANT]
+> **Ambas partes se verifican en clase.** La parte 1 se revisa durante el taller del miércoles de la semana 10 y no se recibe después. La parte 2 se revisa el miércoles de la semana 11 con el equipo presente ejecutando su programa. Un integrante ausente en la verificación obtiene 0.0 en esa parte, salvo excusa válida.
+
+Recuerde: solo `Main` y las clases de `view` pueden imprimir en consola y leer datos.
 
 [Volver al índice](#índice)
 
