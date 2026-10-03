@@ -323,7 +323,7 @@ Estas son las iteraciones del proyecto y los temas del curso con los que coincid
 |-----------|----------------|-------------------|------------------------------------|---------|--------|
 | 1 | Primeros pasos en Java: clases, atributos, constructores y métodos | _Definida en este README_ | — | Semana 9 | 0.5 |
 | 2 | Relaciones entre clases y principio de responsabilidad única | Lunes de la semana 10 | Miércoles de la semana 10 (taller en clase: héroes) | Miércoles de la semana 11 | 1.0 |
-| 3 | Strings & Excepciones | Lunes de la semana 11 | Miércoles de la semana 11 | Semana 12 (módulo del fanático) y semana 13 (excepciones) | 0.5 + 0.5 |
+| 3 | Strings & Excepciones | Lunes de la semana 11 | Miércoles de la semana 12 (taller en clase) | Miércoles de la semana 12 (parte 1: módulo del fanático) y miércoles de la semana 13 (parte 2: administrador y Agencia Central) | 0.5 + 0.5 |
 | 4 | Maps, Sets, archivos de texto y binarios | Lunes de la semana 14 | Miércoles de la semana 14 | Semana 15 | 1.5 |
 | 5 | Herencia, polimorfismo y despacho de misiones | Lunes de la semana 16 | Miércoles de la semana 16 | Final de la semana 18 | 2.5 |
 
