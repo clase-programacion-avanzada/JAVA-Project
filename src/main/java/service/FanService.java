@@ -3,8 +3,8 @@ package service;
 import model.Fan;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 public class FanService {
@@ -18,18 +18,34 @@ public class FanService {
     }
 
     public boolean removeFan(UUID id) {
-        return fans.removeIf(fan -> fan.getId().equals(id));
+        for (int i = 0; i < fans.size(); i++) {
+            if (fans.get(i).getId().equals(id)) {
+                fans.remove(i);
+                return true;
+            }
+        }
+        return false;
     }
 
-    public Optional<Fan> findById(UUID id) {
-        return fans.stream().filter(fan -> fan.getId().equals(id)).findFirst();
+    // Devuelve el fanático con ese id, o null si no existe.
+    public Fan findById(UUID id) {
+        for (Fan fan : fans) {
+            if (fan.getId().equals(id)) {
+                return fan;
+            }
+        }
+        return null;
     }
 
     public List<Fan> getFans() {
-        return List.copyOf(fans);
+        return Collections.unmodifiableList(fans);
     }
 
     public List<String> getFansToString() {
-        return fans.stream().map(Fan::toString).toList();
+        List<String> result = new ArrayList<>();
+        for (Fan fan : fans) {
+            result.add(fan.toString());
+        }
+        return result;
     }
 }

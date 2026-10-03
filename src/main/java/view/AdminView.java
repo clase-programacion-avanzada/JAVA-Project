@@ -88,7 +88,9 @@ public class AdminView {
             println("No hay elementos.");
             return false;
         }
-        items.forEach(item -> println(item));
+        for (String item : items) {
+            println(item);
+        }
         return true;
     }
 
