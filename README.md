@@ -4,7 +4,7 @@ La ciudad necesita héroes. Los héroes necesitan misiones. Y las misiones... ne
 
 **HeroHub** es la agencia encargada de gestionar a los superhéroes de la ciudad: registrar sus poderes, asignar misiones, organizar equipos y mantener contentos a sus fanáticos. Ustedes han sido contratados como el equipo de desarrollo de la agencia. Su trabajo es construir el sistema de gestión interno de HeroHub.
 
-A diferencia de los talleres del curso, este proyecto **no tiene una especificación completa desde el día uno**. Este documento define únicamente la primera iteración. A partir de allí, el sistema crecerá iteración tras iteración con los temas que se verán en clase, y **serán ustedes quienes propongan cómo evolucionar el software**. Si copia este enunciado en un modelo de lenguaje obtendrá, a lo sumo, la primera iteración: el resto del proyecto se diseña en el aula.
+A diferencia de los talleres del curso, este proyecto **crece iteración tras iteración** con los temas que se ven en clase. Este documento define por completo la primera iteración y, para cada una de las siguientes, le dice **qué resultado debe lograr el programa** (ver la [hoja de ruta](#hoja-de-ruta-del-proyecto)). Las reglas detalladas de cada iteración (por ejemplo, los mensajes exactos de error) las entrega el profesor en el taller de esa iteración, y **serán ustedes quienes propongan cómo diseñar el software** para lograr el resultado: qué clases, qué capas y qué archivos. Copiar este documento en un modelo de lenguaje no reemplaza esa propuesta: el diseño se defiende en el aula.
 
 ## Índice
 
@@ -31,10 +31,18 @@ A diferencia de los talleres del curso, este proyecto **no tiene una especificac
     - [Clases sin paquete](#clases-sin-paquete)
       - [Clase `Main`](#clase-main)
     - [Diagrama de clases inicial](#diagrama-de-clases-inicial)
-    - [Prueba de que mis clases están correctamente definidas](#prueba-de-que-mis-clases-están-correctamente-definidas)
+    - [Verificación de la entrega](#verificación-de-la-entrega)
     - [Calificación de la iteración 1](#calificación-de-la-iteración-1)
   - [Iteración 2 - Proyecto base](#iteración-2---proyecto-base)
+  - [La librería de la Agencia](#la-librería-de-la-agencia)
+    - [Paso 1: agregar la librería al proyecto](#paso-1-agregar-la-librería-al-proyecto)
+    - [Paso 2: recibir y configurar el token](#paso-2-recibir-y-configurar-el-token)
+    - [Paso 3: comprobar que funciona](#paso-3-comprobar-que-funciona)
   - [Hoja de ruta del proyecto](#hoja-de-ruta-del-proyecto)
+    - [Iteración 2 - Relaciones entre clases y responsabilidad única](#iteración-2---relaciones-entre-clases-y-responsabilidad-única)
+    - [Iteración 3 - Strings y excepciones: el fanático y la Agencia Central](#iteración-3---strings-y-excepciones-el-fanático-y-la-agencia-central)
+    - [Iteración 4 - Archivos de texto y binarios: cargar y guardar la partida](#iteración-4---archivos-de-texto-y-binarios-cargar-y-guardar-la-partida)
+    - [Iteración 5 - Herencia y polimorfismo: el juego de despacho](#iteración-5---herencia-y-polimorfismo-el-juego-de-despacho)
   - [Calificación general](#calificación-general)
   - [Preguntas frecuentes (FAQs)](#preguntas-frecuentes-faqs)
   - [Recursos en línea](#recursos-en-línea)
@@ -47,22 +55,22 @@ Un aspecto clave del sistema es equilibrar la disponibilidad de los héroes y se
 
 En definitiva, el despacho de misiones de HeroHub combina la toma de decisiones tácticas con la gestión estratégica: no basta con tener héroes poderosos, hay que saber **a quién enviar, con quién y cuándo**.
 
-Tenga en cuenta que esta sección describe la _visión_ del producto, no su especificación. ¿Qué es exactamente una estadística? ¿Cómo se calcula la sinergia de un equipo? ¿Qué ocurre cuando un héroe está en una misión y aparece una emergencia? Esas son decisiones de diseño que los equipos propondrán y defenderán a lo largo de las iteraciones.
+Esta sección describe la _visión_ del producto, no el detalle de cada iteración. La [hoja de ruta](#hoja-de-ruta-del-proyecto) explica cómo se llega a esa visión paso a paso: primero se gestionan héroes, equipos, misiones y fanáticos; luego se validan y se conectan con la Agencia Central; después se guarda y se reanuda el estado; y al final las misiones se despachan, con estadísticas, sinergia y consecuencias. Cómo se diseña cada pieza es una decisión que los equipos propondrán y defenderán a lo largo de las iteraciones.
 
 [Volver al índice](#índice)
 
 ## ¿Cómo se trabajará en este proyecto?
 
-El proyecto se desarrolla en **iteraciones** que coinciden con los temas del curso. La iteración 1 está completamente definida en este documento. A partir de la iteración 2, la dinámica será la siguiente:
+El proyecto se desarrolla en **iteraciones** que coinciden con los temas del curso. La iteración 1 está completamente definida en este documento. Para las demás, la [hoja de ruta](#hoja-de-ruta-del-proyecto) describe el **resultado esperado** y la dinámica de cada semana es la siguiente:
 
-1. **El profesor anuncia el tema de la iteración** (por ejemplo: relaciones entre clases, excepciones, archivos, herencia).
-2. **Cada equipo entrega una propuesta de diseño el lunes** (una semana antes de la entrega de la iteración). La propuesta debe explicar, como mínimo:
-    - Qué clases, atributos y métodos nuevos necesita el sistema.
-    - Cómo cambian las clases existentes.
+1. **Lunes: propuesta de diseño, de alto nivel.** Cada equipo entrega una propuesta corta que explica, como mínimo:
+    - Qué clases nuevas necesita el sistema y cómo cambian las existentes.
+    - Cómo se relacionan y en qué capa vive cada responsabilidad.
     - El diagrama de clases actualizado (puede usar [mermaid](https://mermaid.js.org/syntax/classDiagram.html) o [plantuml](https://plantuml.com/class-diagram)).
-    - Cómo piensa resolver las reglas de negocio del tema en curso.
-3. **El miércoles, durante la clase, cada equipo socializa su propuesta** y recibe retroalimentación del profesor y de los demás equipos. El profesor puede pedir ajustes que harán parte de la calificación.
-4. **El equipo implementa la iteración ajustada** y la entrega en la semana indicada.
+2. **Miércoles: taller en clase.** El profesor da retroalimentación sobre las propuestas, entrega las reglas detalladas de la iteración y, cuando corresponde, el código base. Durante el taller cada equipo construye y entrega la primera parte de la iteración.
+3. **Miércoles siguiente: entrega completa.** El equipo termina el resto en casa y presenta el programa funcionando.
+
+**Las dos partes se verifican en persona, en clase**, con el equipo ejecutando su programa. Un integrante ausente en la verificación obtiene 0.0 en esa parte, salvo excusa válida, y la primera parte no se recibe después del taller.
 
 > [!WARNING]
 > Este proyecto hace parte de su nota final. Las funcionalidades incompletas de una iteración deberán corregirse, pero no impedirán que el equipo continúe con los conceptos de la siguiente. La corrección de regresiones se evaluará por separado.
@@ -245,7 +253,7 @@ classDiagram
     }
 ```
 
-Como puede darse cuenta, **ninguna de las clases está relacionada entre sí** (todavía). ¿Quién debería conocer a quién? ¿Un héroe conoce sus misiones, o la misión conoce a sus héroes? ¿Un equipo puede existir sin héroes? Esas decisiones harán parte de las próximas iteraciones... y de sus propuestas.
+Como puede darse cuenta, **ninguna de las clases está relacionada entre sí** (todavía). ¿Quién debería conocer a quién? ¿Cómo se representa que un equipo reúne héroes? Conectar las clases es justamente el objetivo de la [iteración 2](#iteración-2---relaciones-entre-clases-y-responsabilidad-única), y el diseño de esa conexión será parte de su propuesta.
 
 [Volver al índice](#índice)
 
@@ -307,58 +315,185 @@ Recuerde: solo `Main` y las clases de `view` pueden imprimir en consola y leer d
 
 ## La librería de la Agencia
 
-HeroHub no trabaja sola: la **Agencia Central** pone a disposición de todos los equipos de desarrollo una librería oficial de Java llamada `hero-intel`. Esta librería entrega información actualizada de la agencia, como el nivel de amenaza oficial de una ciudad o la actividad villanesca reciente. Úsela con sabiduría: la información de la Agencia Central es confidencial.
+HeroHub no trabaja sola: la **Agencia Central** pone a disposición de todos los equipos una librería oficial de Java llamada `hero-intel`. Entrega información oficial de la agencia (por ejemplo, el nivel de amenaza de una ciudad o la actividad de los villanos) y, más adelante, despacha misiones y determina cómo terminan. La información de la Agencia Central es confidencial: úsenla con sabiduría.
 
-Para usarla, descargue el archivo `hero-intel-1.0.0.jar` que el profesor publicará, cópielo en una carpeta `libs/` de su proyecto y agregue la dependencia en el archivo `build.gradle`:
+> [!NOTE]
+> La librería **no se usa en las iteraciones 1 y 2**. Se usa a partir de la [iteración 3](#iteración-3---strings-y-excepciones-el-fanático-y-la-agencia-central) y el despacho de misiones llega en la iteración 5. Configúrenla con calma antes de la iteración 3 para que no se les atraviese el día del taller.
+
+### Paso 1: agregar la librería al proyecto
+
+1. Descarguen `hero-intel-1.1.0.jar` desde la página de [Releases](https://github.com/clase-programacion-avanzada/JAVA-Project/releases) de este repositorio.
+2. Creen una carpeta `libs/` al mismo nivel que `build.gradle` y copien allí el archivo `.jar`.
+3. Agreguen la dependencia en `build.gradle` y refresquen Gradle (en IntelliJ: _Load Gradle Changes_):
 
 ```gradle
 dependencies {
-    implementation files('libs/hero-intel-1.0.0.jar')
+    implementation files('libs/hero-intel-1.1.0.jar')
     // ... resto de dependencias
 }
 ```
 
-El profesor le entregará a cada equipo un **token de acceso único, revocable y temporal**. El token identifica al equipo ante la Agencia Central y **nunca debe escribirse en el código fuente**: la librería lo lee de la variable de entorno `HERO_INTEL_TOKEN`.
+### Paso 2: recibir y configurar el token
 
-- Cada equipo recibirá su propio token. **No lo comparta, no lo incluya en capturas de pantalla ni lo suba a ningún repositorio.**
-- Si la Agencia detecta un uso indebido o una filtración, el token será revocado y reemplazado por el profesor.
+El profesor le entrega a cada equipo, por un **canal privado**, dos datos:
 
-Una vez configurada la variable de entorno, la librería se usa de la siguiente manera:
+- Un **token de acceso**, único, revocable y temporal (vence el 15 de diciembre de 2026). Identifica a su equipo ante la Agencia Central y separa su mundo de juego del de los demás equipos.
+- La **ciudad asignada a su equipo**.
 
-```java
-IntelService intel = IntelService.create();
+El token funciona como una contraseña: solo lo conocen los integrantes del equipo. **No lo escriban en el código, en archivos del proyecto, en capturas de pantalla ni en Git (tampoco en repositorios privados).** La librería lo lee de la variable de entorno `HERO_INTEL_TOKEN`; el programa nunca lo recibe como argumento.
 
-// Nivel de amenaza oficial de una ciudad (valor entero)
-int threat = intel.getCityThreatLevel("Metrópolis");
+**Windows.** En `cmd`:
 
-// Actividad villanesca reciente en una ciudad
-List<VillainIntel> villainActivity = intel.getVillainActivity("Metrópolis");
+```bat
+setx HERO_INTEL_TOKEN "token-entregado-por-el-profesor"
 ```
 
-**La guía completa de instalación y configuración** (Windows y macOS, paso a paso, con solución de errores) está en [docs/hero-intel.md](docs/hero-intel.md).
+Cierren y vuelvan a abrir el IDE y las terminales. Para comprobar que existe sin mostrarlo:
 
-Ustedes no necesitan saber _cómo_ la librería obtiene la información; ese es un asunto clasificado de la Agencia Central. Lo único que debe importarles es **dónde tiene sentido usarla en el sistema**. Por ejemplo: ¿debería la agencia permitir registrar una misión con un nivel de amenaza que contradiga el informe oficial de la ciudad? ¿Debería un fanático recibir una alerta cuando un villano aparece en su ciudad? Esas decisiones harán parte de las iteraciones siguientes y de sus propuestas.
+```bat
+if defined HERO_INTEL_TOKEN (echo Token configurado) else (echo Token ausente)
+```
+
+**macOS y Linux.** Si usan zsh:
+
+```bash
+echo 'export HERO_INTEL_TOKEN="token-entregado-por-el-profesor"' >> ~/.zshrc
+source ~/.zshrc
+```
+
+Si usan bash, reemplacen `~/.zshrc` por `~/.bashrc`. Para comprobar que existe sin mostrarlo:
+
+```bash
+[[ -n "$HERO_INTEL_TOKEN" ]] && echo "Token configurado" || echo "Token ausente"
+```
+
+**Desde el IDE.** Como alternativa, agreguen `HERO_INTEL_TOKEN` a las variables de entorno de la configuración de ejecución. No la guarden en un archivo que se comparta con el proyecto.
+
+> [!TIP]
+> Si configuran la variable dos veces, se usa el último valor. Si el token "no funciona", revisen que no haya quedado una línea vieja después de la nueva.
+
+### Paso 3: comprobar que funciona
+
+Creen temporalmente la siguiente clase (no hace parte de su programa; bórrenla al terminar) y cambien `TEAM_CITY` por la ciudad asignada a su equipo, escrita **exactamente** como la recibieron, con tildes:
+
+```java
+import io.github.dmorav1.herointel.IntelAccessException;
+import io.github.dmorav1.herointel.IntelService;
+
+public class ComprobarAgencia {
+
+    private static final String TEAM_CITY = "CIUDAD-DE-SU-EQUIPO";
+
+    public static void main(String[] args) {
+        try {
+            IntelService intel = IntelService.create();
+            System.out.println("Nivel de amenaza de " + TEAM_CITY + ": " + intel.getCityThreatLevel(TEAM_CITY));
+        } catch (IntelAccessException e) {
+            System.out.println("No funcionó: " + e.getMessage());
+        }
+    }
+}
+```
+
+Si todo está bien, imprime un número entero entre 1 y 10. Si no, el mensaje indica qué revisar:
+
+| Mensaje | Qué hacer |
+|---------|-----------|
+| `La variable de entorno HERO_INTEL_TOKEN no está configurada...` | Falta el token: configúrenlo y reinicien el IDE. |
+| `El token del equipo es inválido, está vencido o fue revocado...` | Revisen que lo copiaron completo (sin espacios ni comillas de más) y que no esté definido dos veces. Si persiste, pidan uno nuevo al profesor. |
+| `La Agencia Central no reconoce el recurso consultado...` | La ciudad no es la asignada a su equipo o está mal escrita (las tildes cuentan). |
+| `No fue posible contactar a la Agencia Central` | Sin red o servidor caído. Intenten de nuevo más tarde. |
+
+Las operaciones de la librería y el resto de los errores están en [docs/hero-intel.md](docs/hero-intel.md). Si sospechan que el token se filtró, avisen de inmediato al profesor para revocarlo y recibir uno nuevo.
+
+Ustedes no necesitan saber _cómo_ la librería obtiene la información; ese es un asunto clasificado de la Agencia Central. Lo único que debe importarles es **dónde tiene sentido usarla en el sistema**, y esa decisión hace parte de sus propuestas de las iteraciones 3, 4 y 5.
 
 [Volver al índice](#índice)
 
 ## Hoja de ruta del proyecto
 
-Estas son las iteraciones del proyecto y los temas del curso con los que coinciden. Recuerde: **el detalle de cada iteración lo proponen ustedes**. Este documento solo define la iteración 1.
+Estas son las iteraciones del proyecto y los temas del curso con los que coinciden. Para cada una se describe el **resultado esperado**: qué debe poder hacer el programa al terminar. **Cómo** lograrlo (qué clases, qué capas, qué archivos) lo proponen ustedes los lunes, y el profesor entrega las reglas detalladas de cada iteración en el taller.
 
-| Iteración | Tema del curso | Propuesta (lunes) | Socialización (miércoles en clase) | Entrega | Puntos |
-|-----------|----------------|-------------------|------------------------------------|---------|--------|
+| Iteración | Tema del curso | Propuesta (lunes) | Taller en clase (miércoles) | Entrega | Puntos |
+|-----------|----------------|-------------------|-----------------------------|---------|--------|
 | 1 | Primeros pasos en Java: clases, atributos, constructores y métodos | _Definida en este README_ | — | Semana 9 | 0.5 |
-| 2 | Relaciones entre clases y principio de responsabilidad única | Lunes de la semana 10 | Miércoles de la semana 10 (taller en clase: héroes) | Miércoles de la semana 11 | 1.0 |
-| 3 | Strings & Excepciones | Lunes de la semana 11 | Miércoles de la semana 12 (taller en clase) | Miércoles de la semana 12 (parte 1: módulo del fanático) y miércoles de la semana 13 (parte 2: administrador y Agencia Central) | 0.5 + 0.5 |
+| 2 | Relaciones entre clases y principio de responsabilidad única | Lunes de la semana 10 | Miércoles de la semana 10 (héroes) | Miércoles de la semana 11 | 1.0 |
+| 3 | Strings & Excepciones | Lunes de la semana 11 | Miércoles de la semana 12 (módulo del fanático) | Miércoles de la semana 12 (parte 1) y miércoles de la semana 13 (parte 2) | 0.5 + 0.5 |
 | 4 | Maps, Sets, archivos de texto y binarios | Lunes de la semana 14 | Miércoles de la semana 14 | Semana 15 | 1.5 |
 | 5 | Herencia, polimorfismo y despacho de misiones | Lunes de la semana 16 | Miércoles de la semana 16 | Final de la semana 18 | 2.5 |
 
-Algunas preguntas que las próximas iteraciones deberán responder (y que ustedes deberán proponer cómo resolver):
+### Iteración 2 - Relaciones entre clases y responsabilidad única
 
-- **Iteración 2:** ¿Cómo se relacionan héroes, misiones, equipos y fanáticos? ¿Quién es responsable de crear, eliminar y listar cada entidad? ¿Qué pasa con las misiones de un héroe cuando el héroe se retira (es eliminado)? ¿Dónde vive la lista centralizada de cada entidad? ¿Quién imprime en consola y quién no?
-- **Iteración 3:** ¿Cómo se autentica un fanático en la plataforma? ¿Qué validaciones aplican al nombre de usuario, la contraseña y la edad? ¿Qué excepciones propias necesita HeroHub y con qué mensajes exactos? ¿Qué operaciones puede hacer un fanático y cuáles son exclusivas del administrador? ¿Qué le dice la Agencia Central a la agencia al momento de registrar una misión?
-- **Iteración 4:** ¿Cómo se importan los datos iniciales desde archivos de texto? ¿Cómo se guarda y se reanuda el estado actual en binario? ¿Qué estructura tendrán los archivos? ¿Qué estadísticas describen a un héroe? ¿Cómo se reconstruyen relaciones por id y se generan reportes útiles?
-- **Iteración 5:** ¿Cómo cambia el comportamiento de un héroe según su rango? ¿Cómo se despacha un equipo mediante la Agencia Central? ¿Cómo se ganan experiencia, niveles y puntos de habilidad? ¿Qué ocurre con lesiones, descansos y muertes? ¿Cómo funcionan la sinergia, los ascensos, los villanos y la progresión del despachador? ¿Cómo se reanuda una partida sin aplicar dos veces el mismo desenlace?
+**Resultado esperado.** Un módulo de administración por consola con el que la directora de HeroHub gestiona el catálogo de la agencia: héroes, fanáticos, misiones y equipos, conectados entre sí.
+
+**El sistema debe lograr:**
+
+- Registrar, retirar y listar héroes, fanáticos, misiones y equipos desde un menú.
+- Armar equipos: agregar y retirar héroes de un equipo. Un mismo héroe puede estar en varios equipos, pero nunca dos veces en el mismo.
+- Asignar un equipo a una misión y retirarlo. Una misión tiene como máximo un equipo, y un equipo solo puede estar en una misión a la vez.
+- Guardar, en cada fanático, los héroes que sigue. Los fanáticos siguen héroes, no equipos ni misiones (su propio módulo llega en la iteración 3).
+- Mantener los datos consistentes: al retirar un héroe desaparece de los equipos y de las listas de seguidos; al disolver un equipo, su misión queda sin equipo.
+- Separar las responsabilidades en capas: solo `Main` y las vistas leen datos y escriben en consola.
+
+**Qué se entrega y cuándo (1.0 punto).**
+
+- _Taller en clase, miércoles de la semana 10 (0.4):_ héroes (registrar, retirar y listar), siguiendo el ejemplo del fanático que trae la rama de arranque `iteration-2-starter`, que se publica al inicio del taller.
+- _En casa, miércoles de la semana 11 (0.6):_ equipos, misiones, relaciones, borrados consistentes y el diagrama de clases completo del proyecto.
+
+**Lo que ustedes deciden.** ¿Dónde vive la lista de cada entidad? ¿Quién conoce a quién, y en qué dirección? ¿Quién orquesta un borrado que toca varias listas?
+
+### Iteración 3 - Strings y excepciones: el fanático y la Agencia Central
+
+**Resultado esperado.** El programa deja de romperse con datos malos, los fanáticos tienen su propio módulo y la agencia consulta a la Agencia Central cuando registra misiones.
+
+**El sistema debe lograr:**
+
+- Un módulo del fanático con inicio de sesión: el fanático se autentica, sigue y deja de seguir héroes, consulta los integrantes de un equipo, las misiones registradas y los héroes que sigue, y cierra sesión.
+- Validar los datos de ambos módulos (campos vacíos, formato del usuario y de la contraseña, edad, duplicados, identificadores que no existen) y responder con excepciones propias y mensajes claros.
+- Que ninguna entrada inválida (letras donde va un número, un identificador mal escrito) termine el programa: el menú sigue funcionando.
+- Al registrar una misión, consultar a la Agencia Central el nivel de amenaza oficial de la ciudad, mostrarlo y advertir al administrador si el nivel digitado lo contradice. Si la Agencia no responde, el programa sigue funcionando.
+
+**Qué se entrega y cuándo (0.5 + 0.5 puntos).**
+
+- _Taller en clase, miércoles de la semana 12 (0.5):_ el módulo del fanático con sus excepciones.
+- _En casa, miércoles de la semana 13 (0.5):_ validaciones del registro de fanáticos, el resto de las excepciones del administrador, la integración con la Agencia Central y las entradas inválidas.
+
+**Lo que ustedes deciden.** ¿Qué excepciones propias necesita HeroHub y dónde viven? ¿En qué capa se valida cada regla y en cuál se captura el error? ¿Dónde se guarda quién tiene la sesión iniciada? ¿En qué capa se usa la librería?
+
+### Iteración 4 - Archivos de texto y binarios: cargar y guardar la partida
+
+**Resultado esperado.** HeroHub puede empezar una partida nueva con los datos de la academia y de la agencia, guardar su estado, retomarlo después y generar reportes.
+
+**El sistema debe lograr:**
+
+- Iniciar una partida nueva importando héroes, fanáticos, equipos y misiones desde archivos de texto. Una línea inválida, o que apunta a algo que no existe, se reporta con un mensaje claro y no se carga; nada se inventa en silencio.
+- Reconstruir las relaciones entre entidades a partir de sus identificadores, de forma eficiente.
+- Guardar el estado completo del programa en un único archivo binario y reanudarlo más tarde.
+- Dar a cada héroe cinco estadísticas (combate, intelecto, vigor, carisma y movilidad) que mide la academia, y poder consultarlas.
+- Generar reportes en archivos de texto y mostrarlos en pantalla, entre ellos la popularidad de los héroes y las ciudades vigiladas según su nivel de amenaza oficial.
+- Que un error al leer o escribir archivos no termine el programa.
+
+**Qué se entrega y cuándo (1.5 puntos).** Se entrega en la semana 15. El profesor anuncia en el taller cómo se reparte el trabajo entre la clase y la casa.
+
+**Lo que ustedes deciden.** ¿Qué estructura tienen los archivos de texto? ¿Qué se guarda en el binario? ¿Dónde vive la lógica de archivos para no romper la separación de responsabilidades?
+
+### Iteración 5 - Herencia y polimorfismo: el juego de despacho
+
+**Resultado esperado.** HeroHub se convierte en el juego de despacho de la visión: la agencia envía equipos a las misiones, la Agencia Central decide cómo terminan y la agencia vive las consecuencias.
+
+**El sistema debe lograr:**
+
+- Dar rangos a los héroes (novato, veterano y élite) de modo que el rango cambie su comportamiento, no solo sus datos; por ejemplo, a qué misiones pueden ir.
+- Despachar un equipo a una misión mediante la Agencia Central, que determina la amenaza real, la duración y el desenlace.
+- Aplicar cada desenlace una sola vez: experiencia y niveles, mejoras de estadísticas, lesiones, descanso y muertes. Controlar por separado la actividad de cada héroe (disponible, desplegado, descansando) y su salud.
+- Incorporar a los villanos que reporta la Agencia Central y registrar sus capturas.
+- Premiar la sinergia entre héroes que ganan juntos, ascender a los héroes de rango y hacer progresar al despachador con sus victorias.
+- Dejar que los fanáticos sigan las misiones en curso y el historial de los héroes que siguen.
+- Guardar y reanudar la partida sin repetir el efecto de un desenlace ya aplicado, y generar un reporte del estado de la agencia.
+
+**Qué se entrega y cuándo (2.5 puntos).** La iteración se construye en tres hitos semanales (semanas 16, 17 y 18) y se entrega al final de la semana 18. El profesor anuncia en el taller cómo se reparte el trabajo entre la clase y la casa.
+
+**Lo que ustedes deciden.** ¿Cómo se modela la jerarquía de rangos y qué comportamiento cambia en cada uno? ¿Cómo se registra que un desenlace ya fue aplicado? ¿Cómo se separan la actividad y la salud de un héroe?
 
 [Volver al índice](#índice)
 
@@ -368,8 +503,8 @@ El proyecto suma en total **6.5 puntos** distribuidos en las iteraciones de la h
 
 1. Que el programa compile y ejecute sin errores.
 2. Que se respete la separación de responsabilidades acordada en la propuesta.
-3. Que la propuesta haya sido entregada en la fecha indicada y socializada en clase.
-4. Que los ajustes pedidos por el profesor en la socialización hayan sido aplicados.
+3. Que la propuesta haya sido entregada el lunes y que las entregas se hayan verificado en clase en las fechas indicadas.
+4. Que los ajustes pedidos por el profesor en la retroalimentación del taller hayan sido aplicados.
 5. Que las funcionalidades de las iteraciones anteriores sigan funcionando.
 
 Los requerimientos funcionales los validará el cliente (monitor), mientras que el código y las decisiones de diseño los revisará el profesor.
@@ -395,7 +530,7 @@ Sí. Las decisiones de la agencia influyen en el éxito de las misiones, en las 
 Sí. Los héroes tienen estadísticas y bonificaciones de sinergia ocultas que afectan el desempeño de las misiones, lo que crea una mezcla de gestión táctica y narrativa.
 
 **¿Y cómo se implementa todo esto?**
-Esa es, precisamente, la pregunta que cada equipo deberá responder con sus propuestas, iteración tras iteración. Este README define únicamente el punto de partida; el diseño completo del despacho de misiones se construye (y se defiende) en el aula.
+Esa es la pregunta que cada equipo responde con sus propuestas, iteración tras iteración. Este README le dice **qué resultado** debe lograr el programa en cada iteración; **cómo** diseñarlo (clases, capas, archivos) lo proponen y lo defienden ustedes en el aula.
 
 [Volver al índice](#índice)
 
