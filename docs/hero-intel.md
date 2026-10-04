@@ -16,7 +16,7 @@ La librería es la única interfaz que deben usar los estudiantes. No deben real
 
 ## Agregar la librería
 
-1. Descargue el `.jar` publicado por el profesor.
+1. Descargue `hero-intel-1.1.0.jar` desde la página de [Releases](https://github.com/clase-programacion-avanzada/JAVA-Project/releases) del repositorio.
 2. Cópielo en `libs/`, al mismo nivel de `build.gradle`.
 3. Agregue la versión entregada:
 
@@ -30,7 +30,7 @@ La versión 1.1.0 conserva las operaciones públicas de 1.0.0 y agrega el despac
 
 ## Token de acceso
 
-Cada equipo recibe por un canal privado un **token opaco, único, revocable y temporal**. El servidor usa el token para autenticar al equipo y separar su mundo de juego: villanos activos, capturas y despachos.
+Cada equipo recibe por un canal privado un **token opaco, único, revocable y temporal**, junto con **la ciudad asignada a su equipo**. El servidor usa el token para autenticar al equipo y separar su mundo de juego: villanos activos, capturas y despachos. Las ciudades que consulte deben ser las de su equipo, escritas exactamente como se las entregaron (las tildes cuentan).
 
 El token funciona como una contraseña:
 
