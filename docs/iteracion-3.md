@@ -97,7 +97,7 @@ En esta iteración las misiones todavía no se despachan: el fanático solo cons
 - El sistema consulta con la librería `hero-intel` el nivel de amenaza oficial de la ciudad de la misión y **lo muestra** (un número entre 1 y 10).
 - Si el nivel oficial es **8 o más** y el nivel que digitó el administrador es **3 o menos**, el sistema le advierte que contradice el informe oficial y le pide confirmar. Si no confirma, la misión no se registra.
 - Si la librería lanza `IntelAccessException` (token no configurado o inválido, ciudad desconocida o Agencia Central no disponible), el programa **no termina**: captura la excepción, muestra _"No se pudo consultar el informe de la Agencia Central"_ y **registra la misión igual**. El informe es una ayuda, no un requisito.
-- Cada equipo recibe, junto con su token, la **ciudad asignada a su equipo**. Solo esa ciudad tiene informe oficial para ustedes; para cualquier otra, la Agencia puede responder que no la reconoce. Escriban las ciudades exactamente como las recibieron (las tildes cuentan).
+- Cada equipo recibe, junto con su token, la **ciudad asignada a su equipo**. Su equipo **no puede consultar otra ciudad**: para cualquier otra, la Agencia responde que no la reconoce y el programa muestra el mensaje de arriba. Para ver el flujo completo (nivel oficial, advertencia y confirmación), registren la misión en la ciudad asignada a su equipo, escrita exactamente como la recibieron (las tildes cuentan).
 - El token nunca se escribe en el código: la librería lo lee de la variable de entorno `HERO_INTEL_TOKEN`.
 
 **Retirar misión.** Si el id no existe → `NotFoundException`: _"La misión con id ${id} no existe"_.
