@@ -46,6 +46,13 @@ Este proyecto **crece iteración tras iteración** con los temas que se ven en c
   - [Calificación general](#calificación-general)
   - [Preguntas frecuentes (FAQs)](#preguntas-frecuentes-faqs)
   - [Recursos en línea](#recursos-en-línea)
+    - [Curso completo para consultar en cualquier momento](#curso-completo-para-consultar-en-cualquier-momento)
+    - [Preparación del entorno](#preparación-del-entorno)
+    - [Iteración 1 - Clases, atributos, constructores y métodos](#iteración-1---clases-atributos-constructores-y-métodos)
+    - [Iteración 2 - Relaciones entre clases y responsabilidad única](#iteración-2---relaciones-entre-clases-y-responsabilidad-única-1)
+    - [Iteración 3 - Strings y excepciones](#iteración-3---strings-y-excepciones)
+    - [Iteración 4 - Maps, Sets, archivos de texto y binarios](#iteración-4---maps-sets-archivos-de-texto-y-binarios)
+    - [Iteración 5 - Herencia y polimorfismo](#iteración-5---herencia-y-polimorfismo)
 
 ## La visión: gestión de héroes y planificación estratégica
 
@@ -530,17 +537,97 @@ Esa es la pregunta que cada equipo responde con sus propuestas, iteración tras 
 
 ## Recursos en línea
 
-- [Instalar Java 22 o versiones anteriores en Windows mediante Temurin](https://www.youtube.com/watch?v=nFTsq8Q3Q-o) [Video]
-- [Cómo instalar y desinstalar el JDK de Java 22 en macOS](https://www.youtube.com/watch?v=47AeOQJCV6s) [Video]
-- [¿Para qué sirve el modificador static de Java?](https://www.youtube.com/watch?v=044vXkXypcU) [Video]
-- [Getters y setters o atributos públicos en Java, ¿qué es mejor?](https://www.youtube.com/watch?v=gXvnHialu0s) [Video]
-- [toString en Java ☕ Viendo el estado de los objetos 👀](https://www.youtube.com/watch?v=r9rxz63p4XQ) [Video]
-- [Introducción al Scanner de Java](https://www.youtube.com/watch?v=nvHVzPfdrAQ) [Video]
-- [Mermaid Class Diagrams](https://mermaid.js.org/syntax/classDiagram.html) [Documentación]
-- [Java Data Types](https://www.geeksforgeeks.org/data-types-in-java/) [Artículo]
-- [Java OOP Concepts](https://www.geeksforgeeks.org/object-oriented-programming-oops-concept-in-java/) [Artículo]
-- [Java Constructors](https://www.geeksforgeeks.org/constructors-in-java/) [Artículo]
-- [Package in Java](https://www.geeksforgeeks.org/packages-in-java/) [Artículo]
-- [Java null](https://www.baeldung.com/java-null) [Artículo]
+Esta lista reúne los recursos de los talleres del curso, organizados por iteración. Casi todos los videos son en español. Los artículos de GeeksforGeeks, Baeldung y Oracle están en inglés (se indica en cada uno).
+
+> [!TIP]
+> Si ven "Java 23 y anteriores" en un video de instalación, el procedimiento es el mismo: este proyecto usa **Java 25**, así que instalen esa versión de Temurin.
+
+### Curso completo para consultar en cualquier momento
+
+- [Java desde cero: curso completo para principiantes (POO incluida)](https://youtu.be/JOAqpdM36wI) [Video, MoureDev]. Más de 8 horas; los enlaces de abajo saltan directo al minuto de cada tema.
+- [mouredev/hello-java](https://github.com/mouredev/hello-java) [Repositorio]. El código y los ejercicios de cada lección del curso anterior (usa Java 21 o superior).
+
+### Preparación del entorno
+
+- [Instalar Java en Windows con Temurin (Java 23 y anteriores)](https://www.youtube.com/watch?v=nFTsq8Q3Q-o) [Video, makigas]
+- [Cómo instalar y desinstalar el JDK en macOS (Java 23 y anteriores)](https://www.youtube.com/watch?v=47AeOQJCV6s) [Video, makigas]
+- [Temurin (Adoptium): descarga del JDK](https://adoptium.net/) [Descarga]
+- [hello-java · Instalación (desde el minuto 42:42)](https://youtu.be/JOAqpdM36wI?t=2562) [Video]
+- [hello-java · Editores de código (desde el minuto 51:02)](https://youtu.be/JOAqpdM36wI?t=3062) [Video]
+- [hello-java · IDE IntelliJ IDEA (desde el minuto 59:40)](https://youtu.be/JOAqpdM36wI?t=3580) [Video]
+
+### Iteración 1 - Clases, atributos, constructores y métodos
+
+- [¿Para qué sirve el modificador static de Java?](https://www.youtube.com/watch?v=044vXkXypcU) [Video, makigas]
+- [Getters y setters o atributos públicos en Java, ¿qué es mejor?](https://www.youtube.com/watch?v=gXvnHialu0s) [Video, makigas]
+- [toString en Java: viendo el estado de los objetos](https://www.youtube.com/watch?v=r9rxz63p4XQ) [Video, Charly Cimino]
+- [Introducción al Scanner de Java](https://www.youtube.com/watch?v=nvHVzPfdrAQ) [Video, makigas]
+- [Java Scanner Class](https://www.geeksforgeeks.org/scanner-class-in-java/) [Artículo, en inglés]
+- [Clase `IO` de Java 25 (`IO.println` y `IO.readln`)](https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/IO.html) [Documentación, en inglés]
+- [Java Data Types](https://www.geeksforgeeks.org/data-types-in-java/) [Artículo, en inglés]
+- [Java OOP Concepts](https://www.geeksforgeeks.org/object-oriented-programming-oops-concept-in-java/) [Artículo, en inglés]
+- [Java Constructors](https://www.geeksforgeeks.org/constructors-in-java/) [Artículo, en inglés]
+- [Package in Java](https://www.geeksforgeeks.org/packages-in-java/) [Artículo, en inglés]
+- [Java null](https://www.baeldung.com/java-null) [Artículo, en inglés]
+- [hello-java · Clases y objetos (desde el minuto 5:31:42)](https://youtu.be/JOAqpdM36wI?t=19902) [Video]
+- [hello-java · Modificadores de acceso (desde el minuto 5:59:02)](https://youtu.be/JOAqpdM36wI?t=21542) [Video]
+
+### Iteración 2 - Relaciones entre clases y responsabilidad única
+
+- [Mermaid Class Diagrams](https://mermaid.js.org/syntax/classDiagram.html) [Documentación, en inglés]
+- [Class Diagram](https://www.geeksforgeeks.org/unified-modeling-language-uml-class-diagrams/) [Artículo, en inglés]
+- [Single Responsibility Principle](https://www.theserverside.com/tip/How-to-apply-the-single-responsibility-principle-in-Java) [Artículo, en inglés]
+- [List Java Examples](https://www.geeksforgeeks.org/list-interface-java-examples/) [Artículo, en inglés]
+- [Final Keyword in Java](https://www.geeksforgeeks.org/final-keyword-java/) [Artículo, en inglés]
+- [Clase `UUID` (Java SE 25)](https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/UUID.html) [Documentación, en inglés]
+- [hello-java · Listas (desde el minuto 3:23:53)](https://youtu.be/JOAqpdM36wI?t=12233) [Video]
+- [hello-java · Composición (desde el minuto 7:29:23)](https://youtu.be/JOAqpdM36wI?t=26963) [Video]
+
+### Iteración 3 - Strings y excepciones
+
+- [Everything about Strings in Java](https://www.baeldung.com/java-string) [Artículo, en inglés]
+- [Lesson: Regular Expressions](https://docs.oracle.com/javase/tutorial/essential/regex/index.html) [Documentación, en inglés]
+- [Excepciones en Java (tutorial oficial de Oracle)](https://docs.oracle.com/javase/tutorial/essential/exceptions/index.html) [Documentación, en inglés]
+- [Exceptions in Java](https://www.geeksforgeeks.org/exceptions-in-java/) [Artículo, en inglés]
+- [Excepciones personalizadas en Java](https://www.baeldung.com/java-new-custom-exception) [Artículo, en inglés]
+- [Java: introducción a las excepciones](https://www.youtube.com/watch?v=kGzwPunAOxk) [Video, makigas]
+- [Java: throw y throws, usos y diferencias](https://www.youtube.com/watch?v=-xC0o6JQaoE) [Video, makigas]
+- [hello-java · Strings (desde el minuto 2:15:40)](https://youtu.be/JOAqpdM36wI?t=8140) [Video]
+- [hello-java · equals (desde el minuto 2:31:58)](https://youtu.be/JOAqpdM36wI?t=9118) [Video]
+- [hello-java · trim y replace (desde el minuto 2:37:36)](https://youtu.be/JOAqpdM36wI?t=9456) [Video]
+- [hello-java · Excepciones (desde el minuto 7:37:21)](https://youtu.be/JOAqpdM36wI?t=27441) [Video]
+- [hello-java · Manejo de excepciones (desde el minuto 7:45:30)](https://youtu.be/JOAqpdM36wI?t=27930) [Video]
+- [hello-java · Lanzamiento de excepciones (desde el minuto 7:56:51)](https://youtu.be/JOAqpdM36wI?t=28611) [Video]
+- [hello-java · Excepciones personalizadas (desde el minuto 8:06:21)](https://youtu.be/JOAqpdM36wI?t=29181) [Video]
+- [hello-java · Depuración de errores (desde el minuto 8:16:12)](https://youtu.be/JOAqpdM36wI?t=29772) [Video]
+
+### Iteración 4 - Maps, Sets, archivos de texto y binarios
+
+- [Set in Java](https://www.geeksforgeeks.org/set-in-java/) [Artículo, en inglés]
+- [Map in Java](https://www.geeksforgeeks.org/map-interface-java-examples/) [Artículo, en inglés]
+- [Java IO: archivos, streams, buffers...](https://www.youtube.com/playlist?list=PLTd5ehIj0goOxCwlYFWTKCYH1KeUx1qB1) [Curso en video, makigas]
+- [Different ways of reading a text file in Java](https://www.geeksforgeeks.org/different-ways-reading-text-file-java/) [Artículo, en inglés]
+- [¿Qué es CSV?](https://www.youtube.com/watch?v=SaHIUR9jIPY) [Video, Laboratorio de Tecnologías Sociales]
+- [Introduction to Java Serialization](https://www.baeldung.com/java-serialization) [Artículo, en inglés]
+- [hello-java · Sets (desde el minuto 3:45:02)](https://youtu.be/JOAqpdM36wI?t=13502) [Video]
+- [hello-java · Maps (desde el minuto 4:02:54)](https://youtu.be/JOAqpdM36wI?t=14574) [Video]
+
+### Iteración 5 - Herencia y polimorfismo
+
+- [Java Inheritance](https://www.geeksforgeeks.org/inheritance-in-java/) [Artículo, en inglés]
+- [Java Polymorphism](https://www.geeksforgeeks.org/polymorphism-in-java/) [Artículo, en inglés]
+- [Java Abstract Classes](https://www.geeksforgeeks.org/abstract-classes-in-java/) [Artículo, en inglés]
+- [Java Interfaces](https://www.geeksforgeeks.org/interfaces-in-java/) [Artículo, en inglés]
+- [Enum Types](https://docs.oracle.com/javase/tutorial/java/javaOO/enum.html) [Documentación, en inglés]
+- [Clase `Instant` (Java SE 25)](https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/time/Instant.html) [Documentación, en inglés]
+- [Herencia (extends) en Java](https://www.youtube.com/watch?v=wVE9o9lnfzA) [Video, Charly Cimino]
+- [Cuidado con la herencia y el private en Java](https://www.youtube.com/watch?v=068aC3LhvlY) [Video, Charly Cimino]
+- [protected en Java: usarlo a discreción](https://www.youtube.com/watch?v=D7nGxCS0v-E) [Video, Charly Cimino]
+- [super en Java: los constructores no se heredan](https://www.youtube.com/watch?v=fUUibK4xPq8) [Video, Charly Cimino]
+- [instanceof en Java: averiguando el tipo](https://www.youtube.com/watch?v=rqzk0e9xX-4) [Video, Charly Cimino]
+- [abstract en Java: clases abstractas](https://www.youtube.com/watch?v=q11f-Yr_pC4) [Video, Charly Cimino]
+- [hello-java · Herencia (desde el minuto 6:28:54)](https://youtu.be/JOAqpdM36wI?t=23334) [Video]
+- [hello-java · Polimorfismo (desde el minuto 6:48:25)](https://youtu.be/JOAqpdM36wI?t=24505) [Video]
+- [hello-java · Abstracción (desde el minuto 7:05:50)](https://youtu.be/JOAqpdM36wI?t=25550) [Video]
 
 [Volver al índice](#índice)
