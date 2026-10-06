@@ -33,6 +33,8 @@ Este proyecto **crece iteración tras iteración** con los temas que se ven en c
     - [Diagrama de clases inicial](#diagrama-de-clases-inicial)
     - [Verificación de la entrega](#verificación-de-la-entrega)
     - [Calificación de la iteración 1](#calificación-de-la-iteración-1)
+  - [La librería de la Agencia](#la-librería-de-la-agencia)
+    - [Paso 1: agregar la librería al proyecto](#paso-1-agregar-la-librería-al-proyecto)
     - [Paso 2: recibir y configurar el token](#paso-2-recibir-y-configurar-el-token)
     - [Paso 3: comprobar que funciona](#paso-3-comprobar-que-funciona)
   - [Hoja de ruta del proyecto](#hoja-de-ruta-del-proyecto)
@@ -395,9 +397,10 @@ Estas son las iteraciones del proyecto y los temas del curso con los que coincid
 **El sistema debe lograr:**
 
 - Registrar, retirar y listar héroes, fanáticos, misiones y equipos desde un menú.
-- Armar equipos: agregar y retirar héroes de un equipo. Un mismo héroe puede estar en un equipo, pero nunca dos veces en el mismo.
+- Armar equipos: agregar y retirar héroes de un equipo. Cada héroe pertenece como máximo a un equipo.
 - Asignar un equipo a una misión y retirarlo. Una misión tiene como máximo un equipo, y un equipo solo puede estar en una misión a la vez.
-- Mantener los datos consistentes: al retirar un héroe desaparece de los equipos y de las listas de seguidos; al disolver un equipo, su misión queda sin equipo.
+- Preparar a cada fanático para seguir héroes: guarda la lista de héroes que sigue, que por ahora queda vacía porque seguir héroes llega en la iteración 3.
+- Mantener los datos consistentes: al retirar un héroe desaparece de su equipo y de las listas de héroes seguidos; al disolver un equipo, su misión queda sin equipo.
 - Separar las responsabilidades en capas: solo `Main` y las vistas leen datos y escriben en consola.
 
 **Qué se entrega y cuándo (1.0 punto).**

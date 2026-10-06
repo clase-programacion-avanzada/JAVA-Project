@@ -81,7 +81,7 @@ En esta iteración las misiones todavía no se despachan: el fanático solo cons
 - **Agregar o retirar héroes de un equipo.**
     - Equipo inexistente → `NotFoundException`: _"El equipo con id ${id} no existe"_.
     - Héroe inexistente → `NotFoundException`: _"El héroe con id ${id} no existe"_.
-    - Héroe repetido en el mismo equipo → `AlreadyExistException`: _"El héroe ${name} ya está en el equipo ${teamName}"_. Un héroe sí puede estar en varios equipos distintos; lo que no puede es repetirse dentro del mismo.
+    - Héroe que ya pertenece a un equipo → `AlreadyExistException`: _"El héroe ${name} ya está en el equipo ${teamName}"_. Cada héroe pertenece como máximo a un equipo, así que esto aplica tanto si intentan agregarlo otra vez al mismo equipo como si intentan agregarlo a uno distinto; `${teamName}` es el equipo al que ya pertenece.
     - Retirar un héroe que no está en el equipo → `NotFoundException`: _"El héroe con id ${id} no existe en el equipo ${teamName}"_.
 
 ### Misiones
