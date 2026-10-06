@@ -6,14 +6,15 @@ Este documento es el enunciado detallado de la iteración 3. La [hoja de ruta de
 
 1. [Qué cambia respecto a la iteración 2](#qué-cambia-respecto-a-la-iteración-2)
 2. [Reglas generales](#reglas-generales)
-3. [Parte 1 - Taller en clase (semana 12): módulo del fanático](#parte-1---taller-en-clase-semana-12-módulo-del-fanático)
-4. [Parte 2 - En casa (semana 13): administrador y Agencia Central](#parte-2---en-casa-semana-13-administrador-y-agencia-central)
+3. [Parte 1 - Taller en clase (semana 12): inicio de sesión y registro de fanáticos](#parte-1---taller-en-clase-semana-12-inicio-de-sesión-y-registro-de-fanáticos)
+4. [Parte 2 - En casa (semana 13): seguir héroes, administrador y Agencia Central](#parte-2---en-casa-semana-13-seguir-héroes-administrador-y-agencia-central)
 5. [Entrega y calificación](#entrega-y-calificación)
 6. [Qué debe incluir la propuesta del lunes](#qué-debe-incluir-la-propuesta-del-lunes)
 
 ## Qué cambia respecto a la iteración 2
 
-- El programa tiene **dos módulos**: el del administrador (ya existe) y el del **fanático**, con inicio de sesión.
+- El programa tiene **dos módulos**: el del administrador (ya existe) y el del **fanático**, con inicio de sesión. El módulo del fanático hace solo dos cosas: autenticarse y seguir o dejar de seguir héroes.
+- Los héroes ya traen experiencia, estadísticas y estado desde el código base. Ahora deben **calcular su nivel y su rango**, y con ellos se aplica una regla nueva sobre los equipos.
 - Todas las operaciones validan sus datos y responden con **excepciones propias** y mensajes claros.
 - **Ninguna entrada inválida termina el programa**: el menú sigue funcionando.
 - Al registrar una misión, el administrador consulta a la **Agencia Central** (librería `hero-intel`) el nivel de amenaza oficial de la ciudad.
@@ -35,29 +36,13 @@ Antes de empezar, configuren la librería y su token siguiendo la sección [La l
 5. **Números.** Si el usuario digita letras donde se espera un número (una opción del menú, la edad, el nivel de amenaza, la duración), el programa no termina: muestra un mensaje y vuelve a pedir el dato.
 6. El menú principal queda así: `1. Módulo administrador`, `2. Módulo fanático`, `0. Salir`.
 
-## Parte 1 - Taller en clase (semana 12): módulo del fanático
+## Parte 1 - Taller en clase (semana 12): inicio de sesión y registro de fanáticos
 
-El fanático es un **espectador** de la agencia: no crea equipos ni gestiona nada. Sigue a sus héroes favoritos (no a equipos) y vive las misiones desde la grada.
+El fanático es un **espectador** de la agencia: no crea equipos ni gestiona nada. Sigue a sus héroes favoritos (no a equipos). En el taller se construyen la puerta de entrada del fanático y las validaciones de su registro.
 
-**Antes del taller** registren, con el módulo del administrador, al menos un fanático, varios héroes y un equipo con héroes, para tener con qué probar.
+**Antes del taller** registren, con el módulo del administrador, al menos un fanático y varios héroes para tener con qué probar.
 
-Operaciones del módulo del fanático:
-
-1. **Iniciar sesión.** El fanático se autentica con su nombre de usuario y su contraseña; ambos deben coincidir exactamente (las mayúsculas cuentan). Si no coinciden se muestra _"Usuario o contraseña incorrectos"_, no se muestra el menú del fanático y se vuelve al menú principal.
-2. **Seguir a un héroe.**
-    - Si el id no existe → `NotFoundException`: _"El héroe con id ${id} no existe"_.
-    - Si ya lo sigue → `AlreadyExistException`: _"El fanático ya sigue al héroe ${name}"_.
-3. **Dejar de seguir a un héroe.** El sistema muestra primero los héroes que sigue. Si el id no está en su lista → `NotFoundException`: _"El héroe con id ${id} no existe en la lista de héroes seguidos del fanático"_.
-4. **Ver los integrantes de un equipo** (cualquier equipo). Si el equipo no existe → `NotFoundException`: _"El equipo con id ${id} no existe"_.
-5. **Ver las misiones registradas**, con nombre clave, ciudad, nivel de amenaza estimado, duración estimada y equipo asignado (si lo tiene).
-6. **Ver los héroes que sigue.**
-7. **Cerrar sesión.**
-
-En esta iteración las misiones todavía no se despachan: el fanático solo consulta el catálogo. El despacho llega en la iteración 5.
-
-## Parte 2 - En casa (semana 13): administrador y Agencia Central
-
-### Registrar y eliminar fanáticos
+**Iniciar y cerrar sesión.** El fanático se autentica con su nombre de usuario y su contraseña; ambos deben coincidir exactamente (las mayúsculas cuentan). Si no coinciden se muestra _"Usuario o contraseña incorrectos"_, no se muestra el menú del fanático y se vuelve al menú principal. Con la sesión iniciada, el fanático puede cerrar sesión y volver al menú principal. Las operaciones de su menú (seguir héroes) se completan en la parte 2.
 
 **Registrar fanático.** Se validan los datos en este orden; la primera regla que falla produce el error:
 
@@ -67,12 +52,40 @@ En esta iteración las misiones todavía no se despachan: el fanático solo cons
 4. La contraseña tiene mínimo 8 caracteres, una mayúscula, una minúscula, un número y un carácter especial de este conjunto: `#?!@$%^&*-` → `IllegalArgumentException`: _"La contraseña debe tener mínimo 8 caracteres, una mayúscula, una minúscula, un número y un carácter especial (#?!@$%^&*-)"_.
 5. La edad es **mayor** a 14 años (14 no se acepta) → `IllegalArgumentException`: _"La edad debe ser mayor a 14 años"_.
 
+## Parte 2 - En casa (semana 13): seguir héroes, administrador y Agencia Central
+
+### Módulo del fanático: seguir héroes
+
+Con la sesión iniciada, el menú del fanático ofrece:
+
+1. **Seguir a un héroe.**
+    - Si el id no existe → `NotFoundException`: _"El héroe con id ${id} no existe"_.
+    - Si ya lo sigue → `AlreadyExistException`: _"El fanático ya sigue al héroe ${name}"_.
+2. **Dejar de seguir a un héroe.** El sistema muestra primero los héroes que sigue. Si el id no está en su lista → `NotFoundException`: _"El héroe con id ${id} no existe en la lista de héroes seguidos del fanático"_.
+3. **Ver los héroes que sigue.**
+4. **Cerrar sesión.**
+
+El fanático no consulta equipos ni misiones: en esta iteración las misiones todavía no se despachan.
+
+### Eliminar fanáticos
+
 **Eliminar fanático.** Si el id no existe → `NotFoundException`: _"El fanático con id ${id} no existe"_.
 
 ### Héroes
 
-- **Registrar héroe.** Nombre vacío o `null` → `IllegalArgumentException`: _"El nombre del héroe no puede estar vacío o ser null"_. Nombre repetido (sin distinguir mayúsculas de minúsculas) → `AlreadyExistException`: _"El héroe con nombre ${name} ya existe"_.
-- **Retirar héroe.** Si el id no existe → `NotFoundException`: _"El héroe con id ${id} no existe"_. Si se retira con éxito, siguen aplicando las reglas de la iteración 2 sobre equipos y fanáticos.
+Desde el código base, cada héroe tiene experiencia (`experience`) y estado (`state`). **`Hero` debe tener dos métodos nuevos que escriben ustedes**:
+
+- `getLevel()`: el nivel es la experiencia dividida entre 100, sin decimales (999 de experiencia es nivel 9; 1000 es nivel 10).
+- `getRank()`: el rango se calcula con el nivel y se devuelve como texto: `intern` (nivel 0 a 9), `junior` (10 a 19), `veteran` (20 a 39) o `elite` (40 en adelante). El rango no se guarda: siempre se calcula.
+
+Reglas de los héroes:
+
+- **Registrar héroe.** Se validan los datos en este orden:
+    1. Nombre vacío o `null` → `IllegalArgumentException`: _"El nombre del héroe no puede estar vacío o ser null"_.
+    2. Alguna de las cinco estadísticas fuera de 1 a 10 → `IllegalArgumentException`: _"Las estadísticas deben estar entre 1 y 10"_.
+    3. Experiencia negativa → `IllegalArgumentException`: _"La experiencia no puede ser negativa"_.
+    4. Nombre repetido (sin distinguir mayúsculas de minúsculas) → `AlreadyExistException`: _"El héroe con nombre ${name} ya existe"_.
+- **Retirar héroe.** Si el id no existe → `NotFoundException`: _"El héroe con id ${id} no existe"_. Si se retira con éxito, siguen aplicando las reglas de la iteración 2 sobre equipos y fanáticos, junto con la regla del veterano de la sección siguiente.
 
 ### Equipos
 
@@ -83,6 +96,11 @@ En esta iteración las misiones todavía no se despachan: el fanático solo cons
     - Héroe inexistente → `NotFoundException`: _"El héroe con id ${id} no existe"_.
     - Héroe que ya pertenece a un equipo → `AlreadyExistException`: _"El héroe ${name} ya está en el equipo ${teamName}"_. Cada héroe pertenece como máximo a un equipo, así que esto aplica tanto si intentan agregarlo otra vez al mismo equipo como si intentan agregarlo a uno distinto; `${teamName}` es el equipo al que ya pertenece.
     - Retirar un héroe que no está en el equipo → `NotFoundException`: _"El héroe con id ${id} no existe en el equipo ${teamName}"_.
+- **Regla del veterano.** Un equipo con integrantes debe tener siempre al menos un héroe de rango `veteran` o superior (`veteran` o `elite`). Un equipo vacío es válido. La regla se revisa en cada cambio, después de las demás validaciones, y si no se cumple → `IllegalArgumentException`: _"El equipo ${teamName} necesita al menos un héroe de rango veterano o superior"_:
+    - Agregar un héroe a un equipo vacío: el primero debe ser veterano o superior.
+    - Retirar de un equipo al único veterano mientras quedan otros integrantes.
+    - Retirar de la base de datos a un héroe que es el único veterano de un equipo con más integrantes (el héroe no se retira).
+    - Retirar al último integrante de un equipo, o disolver el equipo, siempre es posible.
 
 ### Misiones
 
@@ -119,17 +137,18 @@ Cada parte se califica sobre 5.0 y se **verifica en persona, en clase**, con el 
 |----------|--------|
 | El paquete `exception` existe y la lógica lanza mientras la vista captura | 1.0 |
 | Inicio y cierre de sesión del fanático, con su mensaje de error | 1.5 |
-| Seguir y dejar de seguir héroes con sus excepciones y mensajes exactos; ver integrantes de un equipo, misiones y héroes que sigue | 1.5 |
-| Un id vacío o con formato inválido en el módulo del fanático no termina el programa | 1.0 |
+| Registro de fanáticos con sus validaciones y mensajes exactos | 2.0 |
+| Un dato inválido (id vacío o mal escrito, letras en la edad o en una opción del menú) no termina el programa en el registro ni en el inicio de sesión | 0.5 |
 
 **Parte 2 - En casa, miércoles de la semana 13 (0.5 puntos de la nota del proyecto):**
 
 | Criterio | Puntos |
 |----------|--------|
-| Registro y eliminación de fanáticos con sus validaciones y mensajes exactos | 1.25 |
-| Excepciones del resto del módulo del administrador con mensajes exactos | 1.25 |
-| Consulta a la Agencia Central en una sola capa: muestra el nivel oficial, advierte y confirma, y sigue funcionando si la Agencia no responde; el token sale de `HERO_INTEL_TOKEN` | 1.5 |
-| Entradas inválidas (letras en campos numéricos, ids mal escritos) no terminan el programa en ningún módulo | 1.0 |
+| Seguir y dejar de seguir héroes y ver los que sigue, con excepciones y mensajes exactos | 1.0 |
+| Eliminación de fanáticos y excepciones del resto del módulo del administrador (héroes, equipos, misiones) con mensajes exactos | 1.0 |
+| `getLevel()`, `getRank()` y la regla del veterano en los equipos | 1.0 |
+| Consulta a la Agencia Central en una sola capa: muestra el nivel oficial, advierte y confirma, y sigue funcionando si la Agencia no responde; el token sale de `HERO_INTEL_TOKEN` | 1.25 |
+| Entradas inválidas (letras en campos numéricos, ids mal escritos) no terminan el programa en ningún módulo | 0.75 |
 
 ## Qué debe incluir la propuesta del lunes
 
@@ -139,5 +158,6 @@ Una propuesta corta, de alto nivel, con:
 - En qué capa se valida cada regla y en cuál se captura el error.
 - Dónde se guarda quién tiene la sesión iniciada.
 - Cómo evitan que una entrada inválida termine el programa.
+- Dónde viven el nivel, el rango y la regla del veterano, y qué cambios de equipo la disparan.
 - En qué capa usan la librería `hero-intel` y en qué momento la crean (si la crean al arrancar el programa y no hay token, el programa no arranca).
 - El diagrama de clases actualizado.

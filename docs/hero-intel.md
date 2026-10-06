@@ -110,6 +110,9 @@ Los UUID de villano son estables. El mismo villano conserva su identidad entre c
 
 ## API 1.1.0: despacho de misiones
 
+> [!NOTE]
+> **Próximamente.** Para la iteración 5 la librería se actualizará: el desenlace de cada héroe incluirá la **experiencia ganada** y se podrá pedir una **simulación** antes de despachar. Los villanos y la sinergia los maneja la Agencia Central; el proyecto no los modela. Esta sección describe la versión 1.1.0, vigente hoy, y se completará cuando se publique la nueva versión.
+
 ### Perfiles
 
 ```java
@@ -125,7 +128,7 @@ HeroProfile profile = new HeroProfile(
 );
 ```
 
-`Rank` admite `ROOKIE`, `VETERAN` y `ELITE`. Corresponden a `RookieHero`, `VeteranHero` y `EliteHero` del proyecto. Las estadísticas efectivas deben estar entre 1 y 10.
+`Rank` admite `ROOKIE`, `VETERAN` y `ELITE`. Corresponden a los rangos `junior`, `veteran` y `elite` del héroe (ver el rango en el README). Un héroe `intern` no puede ir a una misión real, así que nunca se envía a la Agencia. Las estadísticas efectivas deben estar entre 1 y 10.
 
 ### Despachar
 

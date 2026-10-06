@@ -56,7 +56,7 @@ Este proyecto **crece iteración tras iteración** con los temas que se ven en c
 
 ## La visión: gestión de héroes y planificación estratégica
 
-El sistema que construirán está inspirado en el minijuego de despacho del videojuego _Dispatch_: un segmento centrado en la gestión donde se asignan superhéroes a misiones con base en sus habilidades y estadísticas, equilibrando las probabilidades de éxito, la disponibilidad y los tiempos de recuperación.
+El sistema que construirán está inspirado en el minijuego de despacho del videojuego _Dispatch_: un segmento centrado en la gestión donde se asignan superhéroes a misiones con base en sus habilidades y estadísticas, equilibrando las probabilidades de éxito, el rango y el estado de los héroes.
 
 Un aspecto clave del sistema es equilibrar la disponibilidad de los héroes y seleccionar la combinación correcta de habilidades. Los héroes tienen fortalezas distintas, y algunas misiones son más desafiantes que otras, lo que exige un uso creativo de sus capacidades. Las estadísticas ocultas, como la **sinergia del equipo**, añaden otra capa de complejidad: recompensan a quienes experimentan con diferentes combinaciones y se adaptan a los requisitos cambiantes de cada misión.
 
@@ -129,11 +129,14 @@ La clase `Hero` tiene dos constructores:
 
 2. `public Hero(String name, String power, String originCity)`: Este constructor crea un objeto `Hero` con el `name`, `power` y `originCity` proporcionados. El `id` se genera automáticamente.
 
+> [!NOTE]
+> Esta es la clase `Hero` de la iteración 1. El código base de la [iteración 2](#iteración-2---proyecto-base) la amplía con las cinco estadísticas, la experiencia y el estado del héroe.
+
 [Volver al índice](#índice)
 
 ##### Clase `Fan`
 
-La clase `Fan` representa un fanático registrado en la plataforma de la agencia. Los fanáticos son los usuarios del sistema: siguen a sus héroes favoritos y a los equipos oficiales creados por la agencia.
+La clase `Fan` representa un fanático registrado en la plataforma de la agencia. Los fanáticos son los usuarios del sistema: siguen a sus héroes favoritos.
 
 ###### Atributos
 
@@ -296,15 +299,26 @@ Este repositorio (y su rama `iteration-2-starter`) contiene el código base de l
 Qué incluye:
 
 - El proyecto Gradle (Java 25) con las clases `model` de la iteración 1, **todavía sin relaciones entre ellas**.
+- Un `Hero` ampliado (ver más abajo): estadísticas, experiencia y estado.
 - Las capas `service`, `controller` y `view` ya conectadas desde `Main`: `MainView` (menú de módulos) y `AdminView` (menú completo del módulo administrador).
 - El **fanático funcionando de punta a punta** como ejemplo: registrar (opción 5), eliminar (opción 6) y listar (opción 13). Recorra `AdminView` → `AdminController` → `FanService` → `Fan` antes de empezar.
 - `HeroService`, `TeamService` y `MissionService` vacíos. Las demás opciones del menú muestran _"Opción pendiente"_.
+
+**El héroe del código base.** Además de `id`, `name`, `power` y `originCity`, `Hero` trae:
+
+- Cinco estadísticas enteras que mide la academia: `combat`, `intellect`, `vigor`, `charisma` y `mobility`. Más adelante deben estar entre 1 y 10; en esta iteración no se validan.
+- `experience`: los puntos de experiencia del héroe (un entero).
+- `state`: el estado del héroe, un texto. Por ahora tiene dos valores posibles, `Hero.REGULAR` y `Hero.INJURED`. Un héroe nuevo siempre nace en estado regular.
+
+Al registrar un héroe por consola se piden el nombre, el poder, la ciudad, las cinco estadísticas y la experiencia; el estado no se pide. El segundo constructor (con `id` y `state`) es para cargar héroes desde archivos de texto en la iteración 4.
+
+El **nivel** y el **rango** del héroe no vienen en el código base: ustedes los escriben en la iteración 3. `Hero` debe terminar con un método `getLevel()` (la experiencia dividida entre 100, sin decimales) y un método `getRank()` que calcula el rango a partir del nivel: `intern` por debajo del nivel 10, `junior` del 10 al 19, `veteran` del 20 al 39 y `elite` desde el 40. El rango no se guarda: se calcula.
 
 Qué deben construir:
 
 | Parte | Dónde | Contenido |
 |---|---|---|
-| 1 | Taller en clase, miércoles de la semana 10 | Héroes: registrar, retirar y listar (opciones 1, 2 y 15). Se entrega al final del taller. |
+| 1 | Taller en clase, miércoles de la semana 10 | Héroes: registrar (incluidas las estadísticas y la experiencia), retirar y listar (opciones 1, 2 y 15). Se entrega al final del taller. |
 | 2 | En casa, entrega el miércoles de la semana 11 | Equipos (opciones 7, 8, 9, 10 y 16), misiones (opciones 3, 4, 11, 12 y 14), las relaciones que faltan en el modelo, las reglas de borrado en cascada y el diagrama de clases completo del proyecto. |
 
 > [!IMPORTANT]
@@ -316,7 +330,7 @@ Recuerde: solo `Main` y las clases de `view` pueden imprimir en consola y leer d
 
 ## La librería de la Agencia
 
-HeroHub no trabaja sola: la **Agencia Central** pone a disposición de todos los equipos una librería oficial de Java llamada `hero-intel`. Entrega información oficial de la agencia (por ejemplo, el nivel de amenaza de una ciudad o la actividad de los villanos) y, más adelante, despacha misiones y determina cómo terminan. La información de la Agencia Central es confidencial: úsenla con sabiduría.
+HeroHub no trabaja sola: la **Agencia Central** pone a disposición de todos los equipos una librería oficial de Java llamada `hero-intel`. Entrega información oficial de la agencia (por ejemplo, el nivel de amenaza de una ciudad) y, más adelante, simula y despacha misiones y determina cómo terminan. La información de la Agencia Central es confidencial: úsenla con sabiduría.
 
 > [!NOTE]
 > La librería **no se usa en las iteraciones 1 y 2**. Se usa a partir de la [iteración 3](#iteración-3---strings-y-excepciones-el-fanático-y-la-agencia-central) y el despacho de misiones llega en la iteración 5. Configúrenla con calma antes de la iteración 3 para que no se les atraviese el día del taller.
@@ -419,7 +433,7 @@ Estas son las iteraciones del proyecto y los temas del curso con los que coincid
 |-----------|----------------|-------------------|-----------------------------|---------|--------|
 | 1 | Primeros pasos en Java: clases, atributos, constructores y métodos | _Definida en este README_ | — | Semana 9 | 0.5 |
 | 2 | Relaciones entre clases y principio de responsabilidad única | Lunes de la semana 10 | Miércoles de la semana 10 (héroes) | Miércoles de la semana 11 | 0.4 + 0.6 |
-| 3 | Strings & Excepciones | Lunes de la semana 11 | Miércoles de la semana 12 (módulo del fanático) | Miércoles de la semana 12 (parte 1) y miércoles de la semana 13 (parte 2) | 0.5 + 0.5 |
+| 3 | Strings & Excepciones | Lunes de la semana 11 | Miércoles de la semana 12 (inicio de sesión y registro de fanáticos) | Miércoles de la semana 12 (parte 1) y miércoles de la semana 13 (parte 2) | 0.5 + 0.5 |
 | 4 | Maps, Sets, archivos de texto y binarios | Lunes de la semana 14 | Miércoles de la semana 14 | Semana 15 | 1.0 |
 | 5 | Herencia, polimorfismo y despacho de misiones | Lunes de la semana 16 | Miércoles de la semana 16 | Final de la semana 18 | 1.5 |
 
@@ -429,7 +443,7 @@ Estas son las iteraciones del proyecto y los temas del curso con los que coincid
 
 **El sistema debe lograr:**
 
-- Registrar, retirar y listar héroes, fanáticos, misiones y equipos desde un menú.
+- Registrar, retirar y listar héroes, fanáticos, misiones y equipos desde un menú. Al registrar un héroe se piden sus estadísticas y su experiencia.
 - Armar equipos: agregar y retirar héroes de un equipo. Cada héroe pertenece como máximo a un equipo.
 - Asignar un equipo a una misión y retirarlo. Una misión tiene como máximo un equipo, y un equipo solo puede estar en una misión a la vez.
 - Preparar a cada fanático para seguir héroes: guarda la lista de héroes que sigue, que por ahora queda vacía porque seguir héroes llega en la iteración 3.
@@ -449,17 +463,18 @@ Estas son las iteraciones del proyecto y los temas del curso con los que coincid
 
 **El sistema debe lograr:**
 
-- Un módulo del fanático con inicio de sesión: el fanático se autentica, sigue y deja de seguir héroes, consulta los integrantes de un equipo, las misiones registradas y los héroes que sigue, y cierra sesión.
-- Validar los datos de ambos módulos (campos vacíos, formato del usuario y de la contraseña, edad, duplicados, identificadores que no existen) y responder con excepciones propias y mensajes claros.
+- Un módulo del fanático con inicio de sesión: el fanático se autentica, sigue y deja de seguir héroes, consulta los héroes que sigue y cierra sesión.
+- Validar los datos de ambos módulos (campos vacíos, formato del usuario y de la contraseña, edad, estadísticas, duplicados, identificadores que no existen) y responder con excepciones propias y mensajes claros.
+- Que los héroes calculen su nivel y su rango a partir de su experiencia, y que todo equipo con integrantes tenga siempre al menos un héroe de rango veterano o superior.
 - Que ninguna entrada inválida (letras donde va un número, un identificador mal escrito) termine el programa: el menú sigue funcionando.
 - Al registrar una misión, consultar a la Agencia Central el nivel de amenaza oficial de la ciudad, mostrarlo y advertir al administrador si el nivel digitado lo contradice. Si la Agencia no responde, el programa sigue funcionando.
 
 **Qué se entrega y cuándo (0.5 + 0.5 puntos).**
 
-- _Taller en clase, miércoles de la semana 12 (0.5):_ el módulo del fanático con sus excepciones.
-- _En casa, miércoles de la semana 13 (0.5):_ validaciones del registro de fanáticos, el resto de las excepciones del administrador, la integración con la Agencia Central y las entradas inválidas.
+- _Taller en clase, miércoles de la semana 12 (0.5):_ inicio y cierre de sesión del fanático y las validaciones del registro de fanáticos, con sus excepciones.
+- _En casa, miércoles de la semana 13 (0.5):_ seguir y dejar de seguir héroes, el resto de las excepciones del administrador, el nivel, el rango y la regla del veterano, la integración con la Agencia Central y las entradas inválidas.
 
-**Lo que ustedes deciden.** ¿Qué excepciones propias necesita HeroHub y dónde viven? ¿En qué capa se valida cada regla y en cuál se captura el error? ¿Dónde se guarda quién tiene la sesión iniciada? ¿En qué capa se usa la librería?
+**Lo que ustedes deciden.** ¿Qué excepciones propias necesita HeroHub y dónde viven? ¿En qué capa se valida cada regla y en cuál se captura el error? ¿Dónde se guarda quién tiene la sesión iniciada? ¿En qué capa se usa la librería? ¿Dónde vive la regla del veterano?
 
 ### Iteración 4 - Archivos de texto y binarios: cargar y guardar la partida
 
@@ -470,7 +485,7 @@ Estas son las iteraciones del proyecto y los temas del curso con los que coincid
 - Iniciar una partida nueva importando héroes, fanáticos, equipos y misiones desde archivos de texto. Asumimos que todas las líneas son válidas.
 - Reconstruir las relaciones entre entidades a partir de sus identificadores, de forma eficiente.
 - Guardar el estado completo del programa en un único archivo binario y reanudarlo más tarde.
-- Dar a cada héroe cinco estadísticas (combate, intelecto, vigor, carisma y movilidad) que mide la academia, y poder consultarlas.
+- Cargar los héroes completos desde el archivo de la academia: estadísticas, experiencia y estado incluidos.
 - Generar reportes en archivos de texto y mostrarlos en pantalla, entre ellos la popularidad de los héroes.
 - Que un error al leer o escribir archivos no termine el programa.
 
@@ -480,21 +495,22 @@ Estas son las iteraciones del proyecto y los temas del curso con los que coincid
 
 ### Iteración 5 - Herencia y polimorfismo: el juego de despacho
 
-**Resultado esperado.** HeroHub se convierte en el juego de despacho de la visión: la agencia envía equipos a las misiones, la Agencia Central decide cómo terminan y la agencia vive las consecuencias.
+**Resultado esperado.** HeroHub se convierte en el juego de despacho de la visión: la agencia envía equipos a misiones reales a través de la Agencia Central, entrena a sus héroes en misiones de práctica y sus fanáticos premium apoyan a los héroes.
 
 **El sistema debe lograr:**
 
-- Dar rangos a los héroes (novato, veterano y élite) de modo que el rango cambie su comportamiento, no solo sus datos; por ejemplo, a qué misiones pueden ir.
-- Despachar un equipo a una misión mediante la Agencia Central, que determina la amenaza real, la duración y el desenlace.
-- Aplicar cada desenlace una sola vez: experiencia y niveles, mejoras de estadísticas, lesiones, descanso y muertes. Controlar por separado la actividad de cada héroe (disponible, desplegado, descansando) y su salud.
-- Incorporar a los villanos que reporta la Agencia Central y registrar sus capturas.
-- Premiar la sinergia entre héroes que ganan juntos, ascender a los héroes de rango y hacer progresar al despachador con sus victorias.
-- Dejar que los fanáticos sigan las misiones en curso y el historial de los héroes que siguen.
+- Dos tipos de fanático: el regular y el premium. Solo el premium puede enviar "me gusta" a los héroes que sigue, uno por día. Un "me gusta" devuelve al estado regular a un héroe herido.
+- Dos tipos de misión: las de entrenamiento y las reales. Las de entrenamiento las dirige la propia HeroHub: terminan en el instante en que se envía el equipo, no exigen validaciones y otorgan una cantidad fija de experiencia a cada héroe del equipo.
+- Despachar un equipo a una misión real mediante la Agencia Central, que decide la duración y el desenlace. Solo se aceptan equipos cuyos héroes sean todos de rango `junior` o superior.
+- Antes de despachar, poder pedirle a la Agencia una simulación para saber si el equipo es demasiado débil. Decidir si el equipo está preparado es responsabilidad de ustedes: la Agencia no los frena.
+- Aplicar cada desenlace una sola vez: la experiencia que entrega la Agencia sube el nivel y el rango del héroe, y las lesiones cambian su estado a herido.
 - Guardar y reanudar la partida sin repetir el efecto de un desenlace ya aplicado, y generar un reporte del estado de la agencia.
+
+Los villanos y la sinergia entre héroes los maneja la Agencia Central: ustedes no los modelan.
 
 **Qué se entrega y cuándo (1.5 puntos).** La iteración se construye en tres hitos semanales (semanas 16, 17 y 18) y se entrega al final de la semana 18. El profesor anuncia en el taller cómo se reparte el trabajo entre la clase y la casa.
 
-**Lo que ustedes deciden.** ¿Cómo se modela la jerarquía de rangos y qué comportamiento cambia en cada uno? ¿Cómo se registra que un desenlace ya fue aplicado? ¿Cómo se separan la actividad y la salud de un héroe?
+**Lo que ustedes deciden.** ¿Qué comparten y qué cambia entre los dos tipos de fanático y entre los dos tipos de misión? ¿Dónde vive la validación de una misión real? ¿Cómo se registra que un desenlace ya fue aplicado?
 
 [Volver al índice](#índice)
 
@@ -519,13 +535,13 @@ Si una entrega queda incompleta, el profesor indicará el conjunto mínimo de co
 ## Preguntas frecuentes (FAQs)
 
 **¿Qué es el despacho de misiones en HeroHub?**
-Es el corazón del sistema: la funcionalidad donde la agencia asigna superhéroes a misiones con base en sus habilidades y estadísticas, equilibrando las probabilidades de éxito, la disponibilidad de los héroes y los tiempos de recuperación entre misiones.
+Es el corazón del sistema: la funcionalidad donde la agencia asigna superhéroes a misiones con base en sus habilidades y estadísticas, equilibrando las probabilidades de éxito, el rango, la experiencia y el estado de los héroes.
 
 **¿Qué tipos de misiones existen en HeroHub?**
 Las misiones varían desde tareas sencillas, como rescatar una mascota atrapada en un árbol, hasta situaciones de alto estrés como negociaciones con rehenes o investigaciones de fenómenos paranormales. El catálogo exacto de misiones y sus niveles de amenaza se definirán a lo largo de las iteraciones (y la Agencia Central tendrá algo que decir al respecto).
 
 **¿Las decisiones de asignación afectan el resultado?**
-Sí. Las decisiones de la agencia influyen en el éxito de las misiones, en las relaciones entre los héroes y en la reputación de HeroHub ante sus fanáticos. Y algo más serio: un escuadrón mal elegido puede significar que un héroe no vuelva a casa.
+Sí. Las decisiones de la agencia influyen en el éxito de las misiones, en las relaciones entre los héroes y en la reputación de HeroHub ante sus fanáticos. Y algo más serio: un escuadrón mal elegido puede significar que un héroe vuelva herido.
 
 **¿Hay elementos de RPG o de simulación en el sistema?**
 Sí. Los héroes tienen estadísticas y bonificaciones de sinergia ocultas que afectan el desempeño de las misiones, lo que crea una mezcla de gestión táctica y narrativa.
