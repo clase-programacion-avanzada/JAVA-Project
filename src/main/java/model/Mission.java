@@ -4,6 +4,7 @@ import java.util.UUID;
 
 public class Mission {
 
+    // Faltará algo acá?
     private UUID id;
     private String codeName;
     private int threatLevel;

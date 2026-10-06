@@ -33,6 +33,7 @@ public class Fan {
     }
 
     public String getPassword() {
+        //Deberíamos retornar la contraseña así no más? 
         return password;
     }
 
@@ -66,6 +67,7 @@ public class Fan {
 
     @Override
     public String toString() {
+        // Deberíamos usar acá los atributos directamente o usar los getters? 
         return "id: " + id + " - username: " + username + " - password: " + password
                 + " - name: " + name + " - lastName: " + lastName + " - age: " + age;
     }

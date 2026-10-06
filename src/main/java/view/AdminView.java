@@ -84,10 +84,12 @@ public class AdminView {
     }
 
     private boolean showList(List<String> items) {
+       
         if (items.isEmpty()) {
             println("No hay elementos.");
             return false;
         }
+
         for (String item : items) {
             println(item);
         }
