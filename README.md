@@ -4,7 +4,7 @@ La ciudad necesita héroes. Los héroes necesitan misiones. Y las misiones... ne
 
 **HeroHub** es la agencia encargada de gestionar a los superhéroes de la ciudad: registrar sus poderes, asignar misiones, organizar equipos y mantener contentos a sus fanáticos. Ustedes han sido contratados como el equipo de desarrollo de la agencia. Su trabajo es construir el sistema de gestión interno de HeroHub.
 
-A diferencia de los talleres del curso, este proyecto **crece iteración tras iteración** con los temas que se ven en clase. Este documento define por completo la primera iteración y, para cada una de las siguientes, le dice **qué resultado debe lograr el programa** (ver la [hoja de ruta](#hoja-de-ruta-del-proyecto)). Las reglas detalladas de cada iteración (por ejemplo, los mensajes exactos de error) las entrega el profesor en el taller de esa iteración, y **serán ustedes quienes propongan cómo diseñar el software** para lograr el resultado: qué clases, qué capas y qué archivos. Copiar este documento en un modelo de lenguaje no reemplaza esa propuesta: el diseño se defiende en el aula.
+Este proyecto **crece iteración tras iteración** con los temas que se ven en clase. Este documento define por completo la primera iteración y, para cada una de las siguientes, le dice **qué resultado debe lograr el programa** (ver la [hoja de ruta](#hoja-de-ruta-del-proyecto)). Las reglas detalladas de cada iteración (por ejemplo, los mensajes exactos de error) las entrega el profesor en el taller de esa iteración, y **serán ustedes quienes propongan cómo diseñar el software** para lograr el resultado: qué clases, qué capas y qué archivos utilizar. El diseño se defiende en el aula.
 
 ## Índice
 
@@ -73,7 +73,7 @@ El proyecto se desarrolla en **iteraciones** que coinciden con los temas del cur
 **Las dos partes se verifican en persona, en clase**, con el equipo ejecutando su programa. Un integrante ausente en la verificación obtiene 0.0 en esa parte, salvo excusa válida, y la primera parte no se recibe después del taller.
 
 > [!WARNING]
-> Este proyecto hace parte de su nota final. Las funcionalidades incompletas de una iteración deberán corregirse, pero no impedirán que el equipo continúe con los conceptos de la siguiente. La corrección de regresiones se evaluará por separado.
+> Este proyecto hace parte de su nota final. Las funcionalidades incompletas de una iteración deberán corregirse, pero no impedirán que el equipo continúe con los conceptos de la siguiente. La corrección se evaluará por separado.
 
 [Volver al índice](#índice)
 
@@ -259,13 +259,7 @@ Como puede darse cuenta, **ninguna de las clases está relacionada entre sí** (
 
 ### Verificación de la entrega
 
-Este repositorio contiene el enunciado del proyecto, no un proyecto Gradle ejecutable ni pruebas automáticas. En el proyecto creado por su equipo, verifique antes de entregar que el programa compile y ejecute desde el IDE y desde Gradle, si su equipo configuró el wrapper:
-
-```bash
-./gradlew build
-```
-
-El comando solo aplica dentro del proyecto Gradle del equipo. Una compilación exitosa no garantiza que las reglas de negocio estén implementadas correctamente; pruebe también cada opción del menú.
+Este repositorio contiene el enunciado del proyecto, no un proyecto Gradle ejecutable ni pruebas automáticas. En el proyecto creado por su equipo, verifique antes de entregar que el programa compile y ejecute desde el IDE.
 
 ### Calificación de la iteración 1
 
@@ -417,22 +411,22 @@ Estas son las iteraciones del proyecto y los temas del curso con los que coincid
 | Iteración | Tema del curso | Propuesta (lunes) | Taller en clase (miércoles) | Entrega | Puntos |
 |-----------|----------------|-------------------|-----------------------------|---------|--------|
 | 1 | Primeros pasos en Java: clases, atributos, constructores y métodos | _Definida en este README_ | — | Semana 9 | 0.5 |
-| 2 | Relaciones entre clases y principio de responsabilidad única | Lunes de la semana 10 | Miércoles de la semana 10 (héroes) | Miércoles de la semana 11 | 1.0 |
+| 2 | Relaciones entre clases y principio de responsabilidad única | Lunes de la semana 10 | Miércoles de la semana 10 (héroes) | Miércoles de la semana 11 | 0.4 + 0.6 |
 | 3 | Strings & Excepciones | Lunes de la semana 11 | Miércoles de la semana 12 (módulo del fanático) | Miércoles de la semana 12 (parte 1) y miércoles de la semana 13 (parte 2) | 0.5 + 0.5 |
-| 4 | Maps, Sets, archivos de texto y binarios | Lunes de la semana 14 | Miércoles de la semana 14 | Semana 15 | 1.5 |
-| 5 | Herencia, polimorfismo y despacho de misiones | Lunes de la semana 16 | Miércoles de la semana 16 | Final de la semana 18 | 2.5 |
+| 4 | Maps, Sets, archivos de texto y binarios | Lunes de la semana 14 | Miércoles de la semana 14 | Semana 15 | 1.0 |
+| 5 | Herencia, polimorfismo y despacho de misiones | Lunes de la semana 16 | Miércoles de la semana 16 | Final de la semana 18 | 1.5 |
 
 ### Iteración 2 - Relaciones entre clases y responsabilidad única
 
-**Resultado esperado.** Un módulo de administración por consola con el que la directora de HeroHub gestiona el catálogo de la agencia: héroes, fanáticos, misiones y equipos, conectados entre sí.
+**Resultado esperado.** Un módulo de administración por consola con el que la dirección de HeroHub gestiona el catálogo de la agencia: héroes, fanáticos, misiones y equipos, conectados entre sí.
 
 **El sistema debe lograr:**
 
 - Registrar, retirar y listar héroes, fanáticos, misiones y equipos desde un menú.
-- Armar equipos: agregar y retirar héroes de un equipo. Un mismo héroe puede estar en varios equipos, pero nunca dos veces en el mismo.
+- Armar equipos: agregar y retirar héroes de un equipo. Cada héroe pertenece como máximo a un equipo.
 - Asignar un equipo a una misión y retirarlo. Una misión tiene como máximo un equipo, y un equipo solo puede estar en una misión a la vez.
-- Guardar, en cada fanático, los héroes que sigue. Los fanáticos siguen héroes, no equipos ni misiones (su propio módulo llega en la iteración 3).
-- Mantener los datos consistentes: al retirar un héroe desaparece de los equipos y de las listas de seguidos; al disolver un equipo, su misión queda sin equipo.
+- Preparar a cada fanático para seguir héroes: guarda la lista de héroes que sigue, que por ahora queda vacía porque seguir héroes llega en la iteración 3.
+- Mantener los datos consistentes: al retirar un héroe desaparece de su equipo y de las listas de héroes seguidos; al disolver un equipo, su misión queda sin equipo.
 - Separar las responsabilidades en capas: solo `Main` y las vistas leen datos y escriben en consola.
 
 **Qué se entrega y cuándo (1.0 punto).**
@@ -466,14 +460,14 @@ Estas son las iteraciones del proyecto y los temas del curso con los que coincid
 
 **El sistema debe lograr:**
 
-- Iniciar una partida nueva importando héroes, fanáticos, equipos y misiones desde archivos de texto. Una línea inválida, o que apunta a algo que no existe, se reporta con un mensaje claro y no se carga; nada se inventa en silencio.
+- Iniciar una partida nueva importando héroes, fanáticos, equipos y misiones desde archivos de texto. Asumimos que todas las líneas son válidas.
 - Reconstruir las relaciones entre entidades a partir de sus identificadores, de forma eficiente.
 - Guardar el estado completo del programa en un único archivo binario y reanudarlo más tarde.
 - Dar a cada héroe cinco estadísticas (combate, intelecto, vigor, carisma y movilidad) que mide la academia, y poder consultarlas.
-- Generar reportes en archivos de texto y mostrarlos en pantalla, entre ellos la popularidad de los héroes y las ciudades vigiladas según su nivel de amenaza oficial.
+- Generar reportes en archivos de texto y mostrarlos en pantalla, entre ellos la popularidad de los héroes.
 - Que un error al leer o escribir archivos no termine el programa.
 
-**Qué se entrega y cuándo (1.5 puntos).** Se entrega en la semana 15. El profesor anuncia en el taller cómo se reparte el trabajo entre la clase y la casa.
+**Qué se entrega y cuándo (1.0 puntos).** Se entrega en la semana 15. El profesor anuncia en el taller cómo se reparte el trabajo entre la clase y la casa.
 
 **Lo que ustedes deciden.** ¿Qué estructura tienen los archivos de texto? ¿Qué se guarda en el binario? ¿Dónde vive la lógica de archivos para no romper la separación de responsabilidades?
 
@@ -491,7 +485,7 @@ Estas son las iteraciones del proyecto y los temas del curso con los que coincid
 - Dejar que los fanáticos sigan las misiones en curso y el historial de los héroes que siguen.
 - Guardar y reanudar la partida sin repetir el efecto de un desenlace ya aplicado, y generar un reporte del estado de la agencia.
 
-**Qué se entrega y cuándo (2.5 puntos).** La iteración se construye en tres hitos semanales (semanas 16, 17 y 18) y se entrega al final de la semana 18. El profesor anuncia en el taller cómo se reparte el trabajo entre la clase y la casa.
+**Qué se entrega y cuándo (1.5 puntos).** La iteración se construye en tres hitos semanales (semanas 16, 17 y 18) y se entrega al final de la semana 18. El profesor anuncia en el taller cómo se reparte el trabajo entre la clase y la casa.
 
 **Lo que ustedes deciden.** ¿Cómo se modela la jerarquía de rangos y qué comportamiento cambia en cada uno? ¿Cómo se registra que un desenlace ya fue aplicado? ¿Cómo se separan la actividad y la salud de un héroe?
 
@@ -499,7 +493,7 @@ Estas son las iteraciones del proyecto y los temas del curso con los que coincid
 
 ## Calificación general
 
-El proyecto suma en total **6.5 puntos** distribuidos en las iteraciones de la hoja de ruta. Para cada iteración se tendrá en cuenta:
+El proyecto suma en total **5 puntos** distribuidos en las iteraciones de la hoja de ruta. Para cada iteración se tendrá en cuenta:
 
 1. Que el programa compile y ejecute sin errores.
 2. Que se respete la separación de responsabilidades acordada en la propuesta.
