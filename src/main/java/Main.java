@@ -9,9 +9,17 @@ import view.MainView;
 public class Main {
 
     public static void main(String[] args) {
-        AdminController adminController = new AdminController(
-                new HeroService(), new FanService(), new TeamService(), new MissionService());
 
-        new MainView(new AdminView(adminController)).run();
+        HeroService heroService = new HeroService();
+        FanService fanService = new FanService();
+        TeamService teamService = new TeamService();
+        MissionService missionService = new MissionService();
+
+        AdminController adminController = new AdminController(
+                heroService, fanService, teamService, missionService);
+
+        AdminView adminView = new AdminView(adminController);
+        
+        new MainView(adminView).run();
     }
 }

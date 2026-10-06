@@ -30,7 +30,8 @@ public class AdminController {
     }
 
     public boolean removeFan(String id) {
-        return fanService.removeFan(UUID.fromString(id));
+        UUID uuid = UUID.fromString(id);
+        return fanService.removeFan(uuid);
     }
 
     public List<String> getFansToString() {

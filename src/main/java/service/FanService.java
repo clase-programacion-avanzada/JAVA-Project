@@ -18,13 +18,14 @@ public class FanService {
     }
 
     public boolean removeFan(UUID id) {
-        for (int i = 0; i < fans.size(); i++) {
-            if (fans.get(i).getId().equals(id)) {
-                fans.remove(i);
-                return true;
-            }
+        Fan fan = findById(id);
+        
+        if (fan == null) {
+            return false;
         }
-        return false;
+        fans.remove(fan);
+        return true;
+    
     }
 
     // Devuelve el fanático con ese id, o null si no existe.
