@@ -284,7 +284,7 @@ El programa debe compilar y ejecutar sin errores. Se debe cumplir con los siguie
 
 ## Iteración 2 - Proyecto base
 
-Esta rama (`iteration-2-starter`) contiene el código base de la iteración 2. Se publica en el taller del miércoles de la semana 10, después de recibir las propuestas del lunes. Si la propuesta de su equipo es diferente y fue aprobada, puede adaptarlo.
+Este repositorio (y su rama `iteration-2-starter`) contiene el código base de la iteración 2, que se usa en el taller del miércoles de la semana 10, después de recibir las propuestas del lunes. Si la propuesta de su equipo es diferente y fue aprobada, puede adaptarlo.
 
 Qué incluye:
 
@@ -431,7 +431,7 @@ Estas son las iteraciones del proyecto y los temas del curso con los que coincid
 
 **Qué se entrega y cuándo (1.0 punto).**
 
-- _Taller en clase, miércoles de la semana 10 (0.4):_ héroes (registrar, retirar y listar), siguiendo el ejemplo del fanático que trae la rama de arranque `iteration-2-starter`, que se publica al inicio del taller.
+- _Taller en clase, miércoles de la semana 10 (0.4):_ héroes (registrar, retirar y listar), siguiendo el ejemplo del fanático que trae el código base (rama `iteration-2-starter`).
 - _En casa, miércoles de la semana 11 (0.6):_ equipos, misiones, relaciones, borrados consistentes y el diagrama de clases completo del proyecto.
 
 **Lo que ustedes deciden.** ¿Dónde vive la lista de cada entidad? ¿Quién conoce a quién, y en qué dirección? ¿Quién orquesta un borrado que toca varias listas?
