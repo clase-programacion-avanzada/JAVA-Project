@@ -73,7 +73,6 @@ El proyecto se desarrolla en **iteraciones** que coinciden con los temas del cur
 1. **Lunes: propuesta de diseño, de alto nivel.** Cada equipo entrega una propuesta corta que explica, como mínimo:
     - Qué clases nuevas necesita el sistema y cómo cambian las existentes.
     - Cómo se relacionan y en qué capa vive cada responsabilidad.
-    - El diagrama de clases actualizado (puede usar [mermaid](https://mermaid.js.org/syntax/classDiagram.html) o [plantuml](https://plantuml.com/class-diagram)).
 2. **Miércoles: taller en clase.** El profesor da retroalimentación sobre las propuestas, entrega las reglas detalladas de la iteración y, cuando corresponde, el código base. Durante el taller cada equipo construye y entrega la primera parte de la iteración.
 3. **Miércoles siguiente: entrega completa.** El equipo termina el resto en casa y presenta el programa funcionando.
 
@@ -446,13 +445,13 @@ Estas son las iteraciones del proyecto y los temas del curso con los que coincid
 - Registrar, retirar y listar héroes, fanáticos, misiones y equipos desde un menú. Al registrar un héroe se piden sus estadísticas y su experiencia.
 - Armar equipos: agregar y retirar héroes de un equipo. Cada héroe pertenece como máximo a un equipo.
 - Asignar un equipo a una misión y retirarlo. Una misión tiene como máximo un equipo, y un equipo solo puede estar en una misión a la vez.
-- Preparar a cada fanático para seguir héroes: guarda la lista de héroes que sigue, que por ahora queda vacía porque seguir héroes llega en la iteración 3.
+- Preparar a cada fanático para seguir héroes: debe tener los atributos necesarios para permitir hacerlo dentro de la clase Fan.
 - Mantener los datos consistentes: al retirar un héroe desaparece de su equipo y de las listas de héroes seguidos; al disolver un equipo, su misión queda sin equipo.
 - Separar las responsabilidades en capas: solo `Main` y las vistas leen datos y escriben en consola.
 
 **Qué se entrega y cuándo (1.0 punto).**
 
-- _Taller en clase, miércoles de la semana 10 (0.4):_ misiones (registrar, retirar y listar), siguiendo el ejemplo del fanático que trae el código base (rama `iteration-2-starter`). Retirar una misión es sencillo: solo desaparece la misión.
+- _Taller en clase, miércoles de la semana 10 (0.4):_ misiones (registrar, retirar y listar), siguiendo el ejemplo del fanático que trae el código base. Retirar una misión es sencillo: solo desaparece la misión.
 - _En casa, miércoles de la semana 11 (0.6):_ héroes, equipos, asignar equipos a misiones, relaciones, borrados consistentes y el diagrama de clases completo del proyecto.
 
 **Lo que ustedes deciden.** ¿Dónde vive la lista de cada entidad? ¿Quién conoce a quién, y en qué dirección? ¿Quién orquesta un borrado que toca varias listas?
