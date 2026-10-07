@@ -17,7 +17,7 @@ Este documento es el enunciado detallado de la iteración 3. La [hoja de ruta de
 - Los héroes ya traen experiencia, estadísticas y estado desde el código base. Ahora deben **calcular su nivel y su rango**, y con ellos se aplica una regla nueva sobre los equipos.
 - Todas las operaciones validan sus datos y responden con **excepciones propias** y mensajes claros.
 - **Ninguna entrada inválida termina el programa**: el menú sigue funcionando.
-- Al registrar una misión, el administrador consulta a la **Agencia Central** (librería `hero-intel`) el nivel de amenaza oficial de la ciudad.
+- Al registrar una misión, el administrador ya **no digita el nivel de amenaza**: el sistema se lo pide a la **Agencia Central** (librería `hero-intel`) para la ciudad de la misión.
 
 Antes de empezar, configuren la librería y su token siguiendo la sección [La librería de la Agencia](../README.md#la-librería-de-la-agencia) del README.
 
@@ -33,7 +33,7 @@ Antes de empezar, configuren la librería y su token siguiendo la sección [La l
         - _"El id del equipo no puede estar vacío o ser null"_
         - _"El id de la misión no puede estar vacío o ser null"_
     - Con formato inválido (no es un UUID) → `IllegalArgumentException`: _"El id ${id} no tiene un formato válido"_.
-5. **Números.** Si el usuario digita letras donde se espera un número (una opción del menú, la edad, las cinco estadísticas y la experiencia de un héroe, el nivel de amenaza, la duración), el programa no termina: muestra un mensaje y vuelve a pedir el dato.
+5. **Números.** Si el usuario digita letras donde se espera un número (una opción del menú, la edad, las cinco estadísticas y la experiencia de un héroe, la duración y, cuando la Agencia no responde, el nivel de amenaza), el programa no termina: muestra un mensaje y vuelve a pedir el dato.
 6. **Espacios y mayúsculas.** Antes de validar y de comparar, a todo texto digitado se le quitan los espacios del inicio y del final. Los nombres de usuario se comparan **exactamente** (las mayúsculas cuentan, igual que en el inicio de sesión); los nombres de héroes y de equipos se comparan **sin distinguir mayúsculas de minúsculas**.
 7. **Listas.** Antes de pedir un id se muestra la lista de donde se elige. Si una lista está vacía se muestra _"No hay elementos."_ (el código base ya lo hace).
 8. **Contraseñas.** La contraseña de un fanático no aparece en ninguna lista ni en ningún mensaje.
@@ -116,18 +116,17 @@ Reglas de los héroes:
 
 ### Misiones
 
-**Registrar misión.** Se validan los datos en este orden:
+**Registrar misión.** Se piden el nombre clave, la duración en horas y la ciudad; **el nivel de amenaza no se pide al administrador**. Se validan los datos en este orden:
 
 1. Los campos de texto no pueden estar vacíos ni ser `null` → `IllegalArgumentException`: _"Los campos no pueden estar vacíos o ser null"_.
-2. El nivel de amenaza está entre 1 y 10 → `IllegalArgumentException`: _"El nivel de amenaza debe estar entre 1 y 10"_.
-3. La duración no es menor a 0 (0 es válido) → `IllegalArgumentException`: _"La duración de la misión no puede ser menor a 0"_.
+2. La duración no es menor a 0 (0 es válido) → `IllegalArgumentException`: _"La duración de la misión no puede ser menor a 0"_.
 
-**Consulta a la Agencia Central.** Con los datos válidos, antes de registrar la misión:
+**Nivel de amenaza desde la Agencia Central.** Con los datos válidos, antes de registrar la misión:
 
-- El sistema consulta con la librería `hero-intel` el nivel de amenaza oficial de la ciudad de la misión y **lo muestra** (un número entre 1 y 10).
-- Si el nivel que digitó el administrador **difiere del oficial en 4 o más niveles** (en cualquier sentido, por ejemplo oficial 9 y digitado 5, u oficial 3 y digitado 8), el sistema le advierte que se aleja del informe oficial y le pide confirmar. Confirmar es digitar `s` (en mayúscula o minúscula); cualquier otra respuesta cancela y la misión no se registra. Los textos del nivel oficial, de la advertencia y de la pregunta son libres; solo el mensaje _"No se pudo consultar el informe de la Agencia Central"_ debe ser exacto.
-- Si la librería lanza `IntelAccessException` (token no configurado o inválido, ciudad desconocida o Agencia Central no disponible), el programa **no termina**: captura la excepción, muestra _"No se pudo consultar el informe de la Agencia Central"_ y **registra la misión igual**. El informe es una ayuda, no un requisito.
-- Cada equipo recibe, junto con su token, la **ciudad asignada a su equipo**. Su equipo **no puede consultar otra ciudad**: para cualquier otra, la Agencia responde que no la reconoce y el programa muestra el mensaje de arriba. Para ver el flujo completo (nivel oficial, advertencia y confirmación), registren la misión en la ciudad asignada a su equipo, escrita exactamente como la recibieron (las tildes cuentan).
+- El sistema consulta con la librería `hero-intel` el nivel de amenaza oficial de la ciudad de la misión, **lo muestra** (un número entre 1 y 10) y **lo guarda como nivel de amenaza de la misión**.
+- Si la librería lanza `IntelAccessException` (token no configurado o inválido, ciudad desconocida o Agencia Central no disponible), el programa **no termina**: captura la excepción, muestra _"No se pudo consultar el informe de la Agencia Central"_ y **le pide el nivel de amenaza al administrador**. Ese nivel debe estar entre 1 y 10 → `IllegalArgumentException`: _"El nivel de amenaza debe estar entre 1 y 10"_ (la misión no se registra). Con un nivel válido, la misión se registra igual. El informe es una ayuda, no un requisito.
+- Los textos con los que se muestra el nivel oficial y se pide el nivel a mano son libres; solo el mensaje _"No se pudo consultar el informe de la Agencia Central"_ debe ser exacto.
+- Cada equipo recibe, junto con su token, la **ciudad asignada a su equipo**. Su equipo **no puede consultar otra ciudad**: para cualquier otra, la Agencia responde que no la reconoce y el programa muestra el mensaje de arriba. Para ver el flujo completo (el nivel oficial guardado en la misión), registren la misión en la ciudad asignada a su equipo, escrita exactamente como la recibieron (las tildes cuentan).
 - El token nunca se escribe en el código: la librería lo lee de la variable de entorno `HERO_INTEL_TOKEN`.
 
 **Retirar misión.** Si el id no existe → `NotFoundException`: _"La misión con id ${id} no existe"_.
@@ -159,7 +158,7 @@ Cada parte se califica sobre 5.0 y se **verifica en persona, en clase**, con el 
 | Seguir y dejar de seguir héroes y ver los que sigue, con excepciones y mensajes exactos | 1.0 |
 | Eliminación de fanáticos y excepciones del resto del módulo del administrador (héroes, equipos, misiones) con mensajes exactos | 1.0 |
 | `getLevel()`, `getRank()` y la regla del veterano en los equipos | 1.0 |
-| Consulta a la Agencia Central en una sola capa: muestra el nivel oficial, advierte y confirma, y sigue funcionando si la Agencia no responde; el token sale de `HERO_INTEL_TOKEN` | 1.25 |
+| Consulta a la Agencia Central en una sola capa: muestra y guarda el nivel oficial en la misión, y si la Agencia no responde pide el nivel a mano y sigue funcionando; el token sale de `HERO_INTEL_TOKEN` | 1.25 |
 | Entradas inválidas (letras en campos numéricos, ids mal escritos) no terminan el programa en ningún módulo | 0.75 |
 
 ## Qué debe incluir la propuesta del lunes

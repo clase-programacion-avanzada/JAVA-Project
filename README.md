@@ -466,7 +466,7 @@ Estas son las iteraciones del proyecto y los temas del curso con los que coincid
 - Validar los datos de ambos módulos (campos vacíos, formato del usuario y de la contraseña, edad, estadísticas, duplicados, identificadores que no existen) y responder con excepciones propias y mensajes claros.
 - Que los héroes calculen su nivel y su rango a partir de su experiencia, y que todo equipo con integrantes tenga siempre al menos un héroe de rango veterano o superior.
 - Que ninguna entrada inválida (letras donde va un número, un identificador mal escrito) termine el programa: el menú sigue funcionando.
-- Al registrar una misión, consultar a la Agencia Central el nivel de amenaza oficial de la ciudad, mostrarlo y advertir al administrador si el nivel digitado lo contradice. Si la Agencia no responde, el programa sigue funcionando.
+- Al registrar una misión, que el nivel de amenaza lo fije la Agencia Central a partir de la ciudad en lugar de digitarlo. Si la Agencia no responde, el programa sigue funcionando y pide el nivel a mano.
 
 **Qué se entrega y cuándo (0.5 + 0.5 puntos).**
 
