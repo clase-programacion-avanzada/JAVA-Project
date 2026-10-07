@@ -1,6 +1,6 @@
 # Librería oficial de la Agencia Central: `hero-intel`
 
-`hero-intel` permite que HeroHub consulte información oficial y, desde la versión 1.1.0, despache misiones para que la Agencia Central determine su duración y desenlace.
+`hero-intel` permite que HeroHub consulte información oficial y despache misiones para que la Agencia Central determine su duración y desenlace. La versión 1.1.0 sirve para consultar informes (iteración 3); la versión 1.2.0 agrega la simulación y la experiencia ganada, y se usa desde la iteración 5.
 
 La librería es la única interfaz que deben usar los estudiantes. No deben realizar peticiones HTTP directamente ni conocer la dirección del servidor.
 
@@ -10,7 +10,7 @@ La librería es la única interfaz que deben usar los estudiantes. No deben real
 2. [Token de acceso](#token-de-acceso)
 3. [Configurar el token](#configurar-el-token)
 4. [API 1.0.0](#api-100-informes)
-5. [API 1.1.0](#api-110-despacho-de-misiones)
+5. [API 1.2.0](#api-120-despacho-y-simulación-de-misiones)
 6. [Errores](#errores)
 7. [Reglas de seguridad](#reglas-de-seguridad)
 
@@ -108,10 +108,10 @@ for (VillainIntel villain : intel.getVillainActivity("Metrópolis")) {
 
 Los UUID de villano son estables. El mismo villano conserva su identidad entre consultas.
 
-## API 1.1.0: despacho de misiones
+## API 1.2.0: despacho y simulación de misiones
 
 > [!NOTE]
-> **Próximamente.** Para la iteración 5 la librería se actualizará: el desenlace de cada héroe incluirá la **experiencia ganada** y se podrá pedir una **simulación** antes de despachar. Los villanos y la sinergia los maneja la Agencia Central; el proyecto no los modela. Esta sección describe la versión 1.1.0, vigente hoy, y se completará cuando se publique la nueva versión.
+> **Disponible desde la iteración 5 (semana 16).** Esta sección describe `hero-intel-1.2.0.jar`, que se publica como un nuevo Release del repositorio. Para la iteración 3 basta la versión 1.1.0 y `getCityThreatLevel`. Los villanos y la sinergia entre héroes los maneja la Agencia Central: el proyecto no los modela.
 
 ### Perfiles
 
@@ -136,8 +136,7 @@ HeroProfile profile = new HeroProfile(
 MissionDispatch dispatch = intel.dispatchMission(
     mission.getId(),
     mission.getCity(),
-    profiles,
-    synergyBonus
+    profiles
 );
 
 System.out.println("Amenaza efectiva: " + dispatch.getEffectiveThreatLevel());
@@ -150,10 +149,11 @@ La firma pública es:
 MissionDispatch dispatchMission(
     UUID missionId,
     String city,
-    List<HeroProfile> squad,
-    int synergyBonus
+    List<HeroProfile> squad
 );
 ```
+
+La sinergia entre héroes la calcula la Agencia Central. La versión de cuatro argumentos con `synergyBonus` sigue existiendo por compatibilidad, pero está obsoleta: la Agencia ignora ese valor.
 
 La Agencia Central calcula la amenaza efectiva, duración y desenlace. `MissionDispatch` expone:
 
@@ -163,6 +163,20 @@ La Agencia Central calcula la amenaza efectiva, duración y desenlace. `MissionD
 - `Instant getCompletesAt()`: momento a partir del cual se puede resolver la misión.
 
 La misión dura la amenaza efectiva por 30 segundos. Una amenaza efectiva de 8 tarda 240 segundos.
+
+### Simular antes de despachar
+
+Antes de despachar puede pedir una simulación del escuadrón:
+
+```java
+MissionSimulationResult simulation = intel.simulateMission(mission.getCity(), profiles);
+
+System.out.println("Amenaza efectiva: " + simulation.getEffectiveThreatLevel());
+System.out.println("Probabilidad de éxito: " + simulation.getSuccessProbability());
+System.out.println("Duración (s): " + simulation.getDurationSeconds());
+```
+
+La simulación no crea ningún despacho ni cambia nada, y repetirla da el mismo resultado mientras no cambien los villanos activos ni las victorias conjuntas de sus héroes. La Agencia no impide despachar un escuadrón débil: decidir si está preparado es responsabilidad de su equipo.
 
 ### Idempotencia del despacho
 
@@ -203,16 +217,16 @@ Los resultados se aplican **por UUID, nunca por nombre**. Dos héroes pueden lla
 
 - `HeroStatus getStatus()`.
 - `long getRecoverySeconds()`.
+- `int getExperienceGained()`: la experiencia que la Agencia otorga al héroe por esta misión.
 
-`HeroStatus` admite tres valores:
+`HeroStatus` admite dos valores:
 
 | Estado | Significado | `getRecoverySeconds()` |
 |--------|-------------|------------------------|
 | `UNHARMED` | El héroe salió ileso | `0` |
 | `INJURED` | El héroe resultó herido | Entre 60 y 300 |
-| `DECEASED` | El héroe murió en la misión | `0` |
 
-Un escuadrón que gana con holgura rara vez sufre bajas. Una derrota aumenta la probabilidad de heridas y muerte, y los Novatos mueren con el doble de frecuencia que los demás rangos.
+Un escuadrón que gana con holgura rara vez sufre heridas, y una derrota las hace más probables. Ningún héroe muere. Todos los héroes del escuadrón reciben la misma experiencia, mayor si la misión se gana y menor si se pierde; qué hacer con ella (nivel y rango) lo decide el proyecto.
 
 ### Capturas
 
@@ -226,7 +240,7 @@ Todas las fallas de la librería son `IntelAccessException`, una excepción no v
 
 ```java
 try {
-    MissionDispatch dispatch = intel.dispatchMission(missionId, city, profiles, synergyBonus);
+    MissionDispatch dispatch = intel.dispatchMission(missionId, city, profiles);
 } catch (IntelAccessException e) {
     System.out.println("No se pudo despachar la misión: " + e.getMessage());
 }
@@ -242,7 +256,6 @@ La librería valida los datos localmente y no gasta una llamada de red si algo e
 | `La ciudad no puede estar vacía` | Ciudad nula, vacía o en blanco |
 | `El escuadrón debe tener entre 1 y 8 héroes` | Escuadrón vacío o de más de 8 |
 | `El escuadrón repite al héroe <uuid>` | El mismo UUID aparece dos veces |
-| `La sinergia debe estar entre 0 y 15` | Bono de sinergia fuera de rango |
 | `La estadística de <nombre> debe estar entre 1 y 10` | Estadística efectiva fuera de rango |
 | `El héroe necesita un identificador` / `un nombre` / `un rango` | Falta un dato obligatorio del perfil |
 
@@ -270,7 +283,7 @@ La librería valida los datos localmente y no gasta una llamada de red si algo e
 5. No comparta el token con otros equipos ni use el de otro equipo. Cada mundo de juego está aislado por token.
 6. Informe de inmediato al profesor si sospecha que el token se filtró, para revocarlo y emitir uno nuevo.
 7. La Agencia Central es la autoridad sobre villanos activos, capturas y desenlaces. El proyecto guarda lo que ya observó, pero no inventa ni corrige esos datos.
-8. Registre localmente qué desenlaces ya aplicó. Volver a consultar, recargar una partida o reintentar tras un error no puede duplicar experiencia, lesiones, muertes ni capturas.
+8. Registre localmente qué desenlaces ya aplicó. Volver a consultar, recargar una partida o reintentar tras un error no puede duplicar experiencia, lesiones ni capturas.
 - `UUID getMissionId()`.
 - `int getEffectiveThreatLevel()`.
 - `Instant getCompletesAt()`.
@@ -299,7 +312,7 @@ for (Map.Entry<UUID, HeroOutcome> entry : outcome.getHeroOutcomes().entrySet()) 
 - `Map<UUID, HeroOutcome> getHeroOutcomes()`.
 - `Optional<VillainIntel> getCapturedVillain()`.
 
-`HeroOutcome` expone `getStatus()` (`UNHARMED`, `INJURED` o `DECEASED`) y `getRecoverySeconds()`. La duración entregada corresponde a una lesión reportada por la Agencia; HeroHub decide localmente cuándo una segunda lesión pasa a `OUT_OF_SERVICE`. Los resultados se relacionan por UUID de héroe, nunca por nombre.
+`HeroOutcome` expone `getStatus()` (`UNHARMED` o `INJURED`), `getRecoverySeconds()` y `getExperienceGained()`. Los resultados se relacionan por UUID de héroe, nunca por nombre.
 
 Consultar antes de `completesAt` produce `IntelAccessException`. Una vez disponible, el mismo `dispatchId` siempre retorna el mismo `outcomeId` y desenlace. La aplicación debe guardar si ya lo aplicó para no duplicar recompensas o consecuencias.
 
