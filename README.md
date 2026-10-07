@@ -473,7 +473,7 @@ Estas son las iteraciones del proyecto y los temas del curso con los que coincid
 - _Taller en clase, miércoles de la semana 12 (0.5):_ las excepciones propias aplicadas a dos flujos que ya existen: las primeras validaciones del registro de fanáticos (campos vacíos y usuarios repetidos) y la gestión de misiones (retirar una misión y asignar o retirar su equipo).
 - _En casa, miércoles de la semana 13 (0.5):_ el resto de las validaciones del registro, el inicio y cierre de sesión del fanático, seguir y dejar de seguir héroes, las excepciones de héroes y equipos, el nivel, el rango y la regla del veterano, la integración con la Agencia Central y las entradas inválidas.
 
-**Lo que ustedes deciden.** ¿Qué excepciones propias necesita HeroHub y dónde viven? ¿En qué capa se valida cada regla y en cuál se captura el error? ¿Dónde se guarda quién tiene la sesión iniciada? ¿En qué capa se usa la librería? ¿Dónde vive la regla del veterano?
+**Lo que ustedes deciden.** ¿Qué excepciones propias necesita HeroHub y dónde viven? ¿En qué capa se valida cada regla y en cuál se captura el error? ¿Dónde se guarda quién tiene la sesión iniciada? ¿En qué capa se usa la librería? ¿Dónde vive la regla del veterano? ¿Qué comprobaciones se repiten y dónde las agrupan?
 
 ### Iteración 4 - Archivos de texto y binarios: cargar y guardar la partida
 

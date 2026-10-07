@@ -55,19 +55,21 @@ El taller trabaja sobre flujos que ya existen en el módulo del administrador. A
     - **Retirar el equipo de una misión** que no tiene equipo → `NotFoundException`: _"La misión ${codeName} no tiene equipo asignado"_.
 4. Que una entrada que no es número (la edad o una opción del menú) no termine el programa (regla general 5).
 
-Las demás reglas del registro de fanático (formato del usuario, contraseña y edad), el registro de misiones, el inicio de sesión y todo lo de héroes y equipos se hacen en casa (parte 2). Cuando agreguen las reglas que faltan del registro, el orden completo de validación es el de la sección [Registrar fanático](#registrar-fanático) de la parte 2.
+Las demás reglas del registro de fanático (formato del usuario, contraseña y edad), el registro de misiones, el inicio de sesión y todo lo de héroes y equipos se hacen en casa (parte 2). Cuando agreguen las reglas que faltan del registro, el orden completo de validación es el de la sección [Registrar fanático](#registrar-fanático) de la parte 2 (la comprobación del usuario repetido pasa al final).
 
 ## Parte 2 - En casa (semana 13): módulo del fanático, administrador y Agencia Central
 
 ### Registrar fanático
 
-Se validan los datos en este orden; la primera regla que falla produce el error. Las reglas 1 y 3 se hicieron en el taller:
+Se validan los datos en este orden; la primera regla que falla produce el error. Las reglas 1 y 5 se hicieron en el taller (en el taller, la 5 va justo después de la 1):
 
 1. Ningún campo de texto puede ser `null`, vacío o solo espacios → `IllegalArgumentException`: _"Los campos no pueden estar vacíos o ser null"_.
 2. El nombre de usuario tiene entre 8 y 10 caracteres y solo contiene letras (mayúsculas o minúsculas), números o los caracteres `_` y `-` → `IllegalArgumentException`: _"El nombre de usuario debe tener entre 8 y 10 caracteres y debe contener solo letras (mayúsculas o minúsculas), números o los caracteres '_' y '-'"_.
-3. El nombre de usuario no existe todavía (comparación exacta) → `AlreadyExistException`: _"El fanático con nombre de usuario ${username} ya existe"_.
-4. La contraseña tiene mínimo 8 caracteres, una mayúscula, una minúscula, un número y un carácter especial de este conjunto: `#?!@$%^&*-` → `IllegalArgumentException`: _"La contraseña debe tener mínimo 8 caracteres, una mayúscula, una minúscula, un número y un carácter especial (#?!@$%^&*-)"_.
-5. La edad es **mayor** a 14 años (14 no se acepta) → `IllegalArgumentException`: _"La edad debe ser mayor a 14 años"_.
+3. La contraseña tiene mínimo 8 caracteres, una mayúscula, una minúscula, un número y un carácter especial de este conjunto: `#?!@$%^&*-` → `IllegalArgumentException`: _"La contraseña debe tener mínimo 8 caracteres, una mayúscula, una minúscula, un número y un carácter especial (#?!@$%^&*-)"_.
+4. La edad es **mayor** a 14 años (14 no se acepta) → `IllegalArgumentException`: _"La edad debe ser mayor a 14 años"_.
+5. El nombre de usuario no existe todavía (comparación exacta) → `AlreadyExistException`: _"El fanático con nombre de usuario ${username} ya existe"_.
+
+Primero se comprueba la forma de los datos y al final si el usuario ya existe.
 
 ### Módulo del fanático: inicio de sesión
 
@@ -189,6 +191,7 @@ Una propuesta corta, de alto nivel, con:
 
 - La lista de excepciones propias, en qué paquete viven y por qué son verificadas.
 - En qué capa se valida cada regla y en cuál se captura el error.
+- Qué comprobaciones se repiten en varias operaciones y dónde las agrupan para no copiarlas.
 - Dónde se guarda quién tiene la sesión iniciada.
 - Cómo evitan que una entrada inválida termine el programa.
 - Dónde viven el nivel, el rango y la regla del veterano, y qué cambios de equipo la disparan.
