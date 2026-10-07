@@ -432,7 +432,7 @@ Estas son las iteraciones del proyecto y los temas del curso con los que coincid
 |-----------|----------------|-------------------|-----------------------------|---------|--------|
 | 1 | Primeros pasos en Java: clases, atributos, constructores y métodos | _Definida en este README_ | — | Semana 9 | 0.5 |
 | 2 | Relaciones entre clases y principio de responsabilidad única | Lunes de la semana 10 | Miércoles de la semana 10 (misiones) | Miércoles de la semana 11 | 0.4 + 0.6 |
-| 3 | Strings & Excepciones | Lunes de la semana 11 | Miércoles de la semana 12 (inicio de sesión y registro de fanáticos) | Miércoles de la semana 12 (parte 1) y miércoles de la semana 13 (parte 2) | 0.5 + 0.5 |
+| 3 | Strings & Excepciones | Lunes de la semana 11 | Miércoles de la semana 12 (excepciones y registro de fanáticos) | Miércoles de la semana 12 (parte 1) y miércoles de la semana 13 (parte 2) | 0.5 + 0.5 |
 | 4 | Maps, Sets, archivos de texto y binarios | Lunes de la semana 14 | Miércoles de la semana 14 | Semana 15 | 1.0 |
 | 5 | Herencia, polimorfismo y despacho de misiones | Lunes de la semana 16 | Miércoles de la semana 16 | Final de la semana 18 | 1.5 |
 
@@ -470,8 +470,8 @@ Estas son las iteraciones del proyecto y los temas del curso con los que coincid
 
 **Qué se entrega y cuándo (0.5 + 0.5 puntos).**
 
-- _Taller en clase, miércoles de la semana 12 (0.5):_ inicio y cierre de sesión del fanático y las validaciones del registro de fanáticos, con sus excepciones.
-- _En casa, miércoles de la semana 13 (0.5):_ seguir y dejar de seguir héroes, el resto de las excepciones del administrador, el nivel, el rango y la regla del veterano, la integración con la Agencia Central y las entradas inválidas.
+- _Taller en clase, miércoles de la semana 12 (0.5):_ las excepciones propias y las primeras validaciones del registro de fanáticos (que no haya campos vacíos ni usuarios repetidos).
+- _En casa, miércoles de la semana 13 (0.5):_ el resto de las validaciones del registro, el inicio y cierre de sesión del fanático, seguir y dejar de seguir héroes, el resto de las excepciones del administrador, el nivel, el rango y la regla del veterano, la integración con la Agencia Central y las entradas inválidas.
 
 **Lo que ustedes deciden.** ¿Qué excepciones propias necesita HeroHub y dónde viven? ¿En qué capa se valida cada regla y en cuál se captura el error? ¿Dónde se guarda quién tiene la sesión iniciada? ¿En qué capa se usa la librería? ¿Dónde vive la regla del veterano?
 

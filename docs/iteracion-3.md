@@ -6,8 +6,8 @@ Este documento es el enunciado detallado de la iteración 3. La [hoja de ruta de
 
 1. [Qué cambia respecto a la iteración 2](#qué-cambia-respecto-a-la-iteración-2)
 2. [Reglas generales](#reglas-generales)
-3. [Parte 1 - Taller en clase (semana 12): inicio de sesión y registro de fanáticos](#parte-1---taller-en-clase-semana-12-inicio-de-sesión-y-registro-de-fanáticos)
-4. [Parte 2 - En casa (semana 13): seguir héroes, administrador y Agencia Central](#parte-2---en-casa-semana-13-seguir-héroes-administrador-y-agencia-central)
+3. [Parte 1 - Taller en clase (semana 12): excepciones y registro de fanáticos](#parte-1---taller-en-clase-semana-12-excepciones-y-registro-de-fanáticos)
+4. [Parte 2 - En casa (semana 13): módulo del fanático, administrador y Agencia Central](#parte-2---en-casa-semana-13-módulo-del-fanático-administrador-y-agencia-central)
 5. [Entrega y calificación](#entrega-y-calificación)
 6. [Qué debe incluir la propuesta del lunes](#qué-debe-incluir-la-propuesta-del-lunes)
 
@@ -39,15 +39,25 @@ Antes de empezar, configuren la librería y su token siguiendo la sección [La l
 8. **Contraseñas.** La contraseña de un fanático no aparece en ninguna lista ni en ningún mensaje.
 9. El menú principal queda así: `1. Módulo administrador`, `2. Módulo fanático`, `0. Salir`.
 
-## Parte 1 - Taller en clase (semana 12): inicio de sesión y registro de fanáticos
+## Parte 1 - Taller en clase (semana 12): excepciones y registro de fanáticos
 
-El fanático es un **espectador** de la agencia: no crea equipos ni gestiona nada. Sigue a sus héroes favoritos (no a equipos). En el taller se construyen la puerta de entrada del fanático y las validaciones de su registro.
+El taller trabaja sobre un flujo que ya existe: el **registro de fanáticos** del módulo del administrador (opción 5). Aquí se crean las excepciones propias y se aplican las dos primeras validaciones; el resto del registro se completa en casa (parte 2).
 
-**Antes del taller** registren, con el módulo del administrador, al menos un fanático y varios héroes para tener con qué probar.
+**En el taller:**
 
-**Iniciar y cerrar sesión.** El fanático se autentica con su nombre de usuario y su contraseña; ambos deben coincidir exactamente (las mayúsculas cuentan). Si no coinciden (o alguno de los dos está vacío) se muestra _"Usuario o contraseña incorrectos"_, no se muestra el menú del fanático y se vuelve al menú principal. Con la sesión iniciada, el menú del fanático ofrece cerrar sesión y volver al menú principal. Las demás opciones de su menú (seguir héroes) se completan en la parte 2.
+1. Crear el paquete `exception` con `NotFoundException` y `AlreadyExistException` (regla general 1). La lógica lanza y la vista captura (regla general 2).
+2. Aplicar estas dos validaciones del **registro de fanático**, en este orden; la primera que falla produce el error:
+    1. Ningún campo de texto puede ser `null`, vacío o solo espacios → `IllegalArgumentException`: _"Los campos no pueden estar vacíos o ser null"_.
+    2. El nombre de usuario no existe todavía → `AlreadyExistException`: _"El fanático con nombre de usuario ${username} ya existe"_.
+3. Que una entrada que no es número (la edad o una opción del menú) no termine el programa (regla general 5).
 
-**Registrar fanático.** Se validan los datos en este orden; la primera regla que falla produce el error:
+Las demás reglas del registro (formato del usuario, contraseña y edad) y el inicio de sesión se hacen en casa. Cuando las agreguen, el orden completo de validación es el de la sección [Registrar fanático](#registrar-fanático) de la parte 2.
+
+## Parte 2 - En casa (semana 13): módulo del fanático, administrador y Agencia Central
+
+### Registrar fanático
+
+Se validan los datos en este orden; la primera regla que falla produce el error. Las reglas 1 y 3 se hicieron en el taller:
 
 1. Ningún campo de texto puede ser `null`, vacío o solo espacios → `IllegalArgumentException`: _"Los campos no pueden estar vacíos o ser null"_.
 2. El nombre de usuario tiene entre 8 y 10 caracteres y solo contiene letras (mayúsculas o minúsculas), números o los caracteres `_` y `-` → `IllegalArgumentException`: _"El nombre de usuario debe tener entre 8 y 10 caracteres y debe contener solo letras (mayúsculas o minúsculas), números o los caracteres '_' y '-'"_.
@@ -55,7 +65,11 @@ El fanático es un **espectador** de la agencia: no crea equipos ni gestiona nad
 4. La contraseña tiene mínimo 8 caracteres, una mayúscula, una minúscula, un número y un carácter especial de este conjunto: `#?!@$%^&*-` → `IllegalArgumentException`: _"La contraseña debe tener mínimo 8 caracteres, una mayúscula, una minúscula, un número y un carácter especial (#?!@$%^&*-)"_.
 5. La edad es **mayor** a 14 años (14 no se acepta) → `IllegalArgumentException`: _"La edad debe ser mayor a 14 años"_.
 
-## Parte 2 - En casa (semana 13): seguir héroes, administrador y Agencia Central
+### Módulo del fanático: inicio de sesión
+
+El fanático es un **espectador** de la agencia: no crea equipos ni gestiona nada. Sigue a sus héroes favoritos (no a equipos).
+
+**Iniciar y cerrar sesión.** El fanático se autentica con su nombre de usuario y su contraseña; ambos deben coincidir exactamente (las mayúsculas cuentan). Si no coinciden (o alguno de los dos está vacío) se muestra _"Usuario o contraseña incorrectos"_, no se muestra el menú del fanático y se vuelve al menú principal. Con la sesión iniciada, el menú del fanático ofrece cerrar sesión y volver al menú principal.
 
 ### Módulo del fanático: seguir héroes
 
@@ -146,20 +160,22 @@ Cada parte se califica sobre 5.0 y se **verifica en persona, en clase**, con el 
 
 | Criterio | Puntos |
 |----------|--------|
-| El paquete `exception` existe y la lógica lanza mientras la vista captura | 1.0 |
-| Inicio y cierre de sesión del fanático, con su mensaje de error | 1.5 |
-| Registro de fanáticos con sus validaciones y mensajes exactos | 2.0 |
-| Un dato inválido (letras en la edad o en una opción del menú, campos vacíos) no termina el programa en el registro ni en el inicio de sesión | 0.5 |
+| El paquete `exception` existe, la lógica lanza y la vista captura sin terminar el programa | 1.5 |
+| Registro de fanático: campos vacíos o `null`, con el mensaje exacto | 1.5 |
+| Registro de fanático: nombre de usuario repetido, con el mensaje exacto | 1.5 |
+| Letras en la edad o en una opción del menú no terminan el programa | 0.5 |
 
 **Parte 2 - En casa, miércoles de la semana 13 (0.5 puntos de la nota del proyecto):**
 
 | Criterio | Puntos |
 |----------|--------|
-| Seguir y dejar de seguir héroes y ver los que sigue, con excepciones y mensajes exactos | 1.0 |
-| Eliminación de fanáticos y excepciones del resto del módulo del administrador (héroes, equipos, misiones) con mensajes exactos | 1.0 |
-| `getLevel()`, `getRank()` y la regla del veterano en los equipos | 1.0 |
-| Consulta a la Agencia Central en una sola capa: muestra y guarda el nivel oficial en la misión, y si la Agencia no responde pide el nivel a mano y sigue funcionando; el token sale de `HERO_INTEL_TOKEN` | 1.25 |
-| Entradas inválidas (letras en campos numéricos, ids mal escritos) no terminan el programa en ningún módulo | 0.75 |
+| Resto del registro de fanático (formato del usuario, contraseña y edad) con mensajes exactos | 0.75 |
+| Inicio y cierre de sesión del fanático, con su mensaje de error | 0.75 |
+| Seguir y dejar de seguir héroes y ver los que sigue, con excepciones y mensajes exactos | 0.75 |
+| Eliminación de fanáticos y excepciones del resto del módulo del administrador (héroes, equipos, misiones) con mensajes exactos | 0.75 |
+| `getLevel()`, `getRank()` y la regla del veterano en los equipos | 0.75 |
+| Consulta a la Agencia Central en una sola capa: muestra y guarda el nivel oficial en la misión, y si la Agencia no responde pide el nivel a mano y sigue funcionando; el token sale de `HERO_INTEL_TOKEN` | 0.75 |
+| Entradas inválidas (letras en campos numéricos, ids mal escritos) no terminan el programa en ningún módulo | 0.5 |
 
 ## Qué debe incluir la propuesta del lunes
 
