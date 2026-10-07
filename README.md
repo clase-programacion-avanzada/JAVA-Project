@@ -318,8 +318,8 @@ Qué deben construir:
 
 | Parte | Dónde | Contenido |
 |---|---|---|
-| 1 | Taller en clase, miércoles de la semana 10 | Héroes: registrar (incluidas las estadísticas y la experiencia), retirar y listar (opciones 1, 2 y 15). Se entrega al final del taller. |
-| 2 | En casa, entrega el miércoles de la semana 11 | Equipos (opciones 7, 8, 9, 10 y 16), misiones (opciones 3, 4, 11, 12 y 14), las relaciones que faltan en el modelo, las reglas de borrado en cascada y el diagrama de clases completo del proyecto. |
+| 1 | Taller en clase, miércoles de la semana 10 | Misiones: registrar, retirar y listar (opciones 3, 4 y 14). Por ahora la misión no tiene equipo: asignarlo es parte del trabajo en casa. Se entrega al final del taller. |
+| 2 | En casa, entrega el miércoles de la semana 11 | Héroes: registrar (incluidas las estadísticas y la experiencia), retirar y listar (opciones 1, 2 y 15); equipos (opciones 7, 8, 9, 10 y 16); asignar y retirar el equipo de una misión (opciones 11 y 12); las relaciones que faltan en el modelo, las reglas de borrado en cascada y el diagrama de clases completo del proyecto. |
 
 > [!IMPORTANT]
 > **Ambas partes se verifican en clase.** La parte 1 se revisa durante el taller del miércoles de la semana 10 y no se recibe después. La parte 2 se revisa el miércoles de la semana 11 con el equipo presente ejecutando su programa. Un integrante ausente en la verificación obtiene 0.0 en esa parte, salvo excusa válida.
@@ -432,7 +432,7 @@ Estas son las iteraciones del proyecto y los temas del curso con los que coincid
 | Iteración | Tema del curso | Propuesta (lunes) | Taller en clase (miércoles) | Entrega | Puntos |
 |-----------|----------------|-------------------|-----------------------------|---------|--------|
 | 1 | Primeros pasos en Java: clases, atributos, constructores y métodos | _Definida en este README_ | — | Semana 9 | 0.5 |
-| 2 | Relaciones entre clases y principio de responsabilidad única | Lunes de la semana 10 | Miércoles de la semana 10 (héroes) | Miércoles de la semana 11 | 0.4 + 0.6 |
+| 2 | Relaciones entre clases y principio de responsabilidad única | Lunes de la semana 10 | Miércoles de la semana 10 (misiones) | Miércoles de la semana 11 | 0.4 + 0.6 |
 | 3 | Strings & Excepciones | Lunes de la semana 11 | Miércoles de la semana 12 (inicio de sesión y registro de fanáticos) | Miércoles de la semana 12 (parte 1) y miércoles de la semana 13 (parte 2) | 0.5 + 0.5 |
 | 4 | Maps, Sets, archivos de texto y binarios | Lunes de la semana 14 | Miércoles de la semana 14 | Semana 15 | 1.0 |
 | 5 | Herencia, polimorfismo y despacho de misiones | Lunes de la semana 16 | Miércoles de la semana 16 | Final de la semana 18 | 1.5 |
@@ -452,8 +452,8 @@ Estas son las iteraciones del proyecto y los temas del curso con los que coincid
 
 **Qué se entrega y cuándo (1.0 punto).**
 
-- _Taller en clase, miércoles de la semana 10 (0.4):_ héroes (registrar, retirar y listar), siguiendo el ejemplo del fanático que trae el código base (rama `iteration-2-starter`).
-- _En casa, miércoles de la semana 11 (0.6):_ equipos, misiones, relaciones, borrados consistentes y el diagrama de clases completo del proyecto.
+- _Taller en clase, miércoles de la semana 10 (0.4):_ misiones (registrar, retirar y listar), siguiendo el ejemplo del fanático que trae el código base (rama `iteration-2-starter`). Retirar una misión es sencillo: solo desaparece la misión.
+- _En casa, miércoles de la semana 11 (0.6):_ héroes, equipos, asignar equipos a misiones, relaciones, borrados consistentes y el diagrama de clases completo del proyecto.
 
 **Lo que ustedes deciden.** ¿Dónde vive la lista de cada entidad? ¿Quién conoce a quién, y en qué dirección? ¿Quién orquesta un borrado que toca varias listas?
 
