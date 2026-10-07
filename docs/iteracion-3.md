@@ -33,8 +33,11 @@ Antes de empezar, configuren la librería y su token siguiendo la sección [La l
         - _"El id del equipo no puede estar vacío o ser null"_
         - _"El id de la misión no puede estar vacío o ser null"_
     - Con formato inválido (no es un UUID) → `IllegalArgumentException`: _"El id ${id} no tiene un formato válido"_.
-5. **Números.** Si el usuario digita letras donde se espera un número (una opción del menú, la edad, el nivel de amenaza, la duración), el programa no termina: muestra un mensaje y vuelve a pedir el dato.
-6. El menú principal queda así: `1. Módulo administrador`, `2. Módulo fanático`, `0. Salir`.
+5. **Números.** Si el usuario digita letras donde se espera un número (una opción del menú, la edad, las cinco estadísticas y la experiencia de un héroe, el nivel de amenaza, la duración), el programa no termina: muestra un mensaje y vuelve a pedir el dato.
+6. **Espacios y mayúsculas.** Antes de validar y de comparar, a todo texto digitado se le quitan los espacios del inicio y del final. Los nombres de usuario se comparan **exactamente** (las mayúsculas cuentan, igual que en el inicio de sesión); los nombres de héroes y de equipos se comparan **sin distinguir mayúsculas de minúsculas**.
+7. **Listas.** Antes de pedir un id se muestra la lista de donde se elige. Si una lista está vacía se muestra _"No hay elementos."_ (el código base ya lo hace).
+8. **Contraseñas.** La contraseña de un fanático no aparece en ninguna lista ni en ningún mensaje.
+9. El menú principal queda así: `1. Módulo administrador`, `2. Módulo fanático`, `0. Salir`.
 
 ## Parte 1 - Taller en clase (semana 12): inicio de sesión y registro de fanáticos
 
@@ -42,13 +45,13 @@ El fanático es un **espectador** de la agencia: no crea equipos ni gestiona nad
 
 **Antes del taller** registren, con el módulo del administrador, al menos un fanático y varios héroes para tener con qué probar.
 
-**Iniciar y cerrar sesión.** El fanático se autentica con su nombre de usuario y su contraseña; ambos deben coincidir exactamente (las mayúsculas cuentan). Si no coinciden se muestra _"Usuario o contraseña incorrectos"_, no se muestra el menú del fanático y se vuelve al menú principal. Con la sesión iniciada, el fanático puede cerrar sesión y volver al menú principal. Las operaciones de su menú (seguir héroes) se completan en la parte 2.
+**Iniciar y cerrar sesión.** El fanático se autentica con su nombre de usuario y su contraseña; ambos deben coincidir exactamente (las mayúsculas cuentan). Si no coinciden (o alguno de los dos está vacío) se muestra _"Usuario o contraseña incorrectos"_, no se muestra el menú del fanático y se vuelve al menú principal. Con la sesión iniciada, el menú del fanático ofrece cerrar sesión y volver al menú principal. Las demás opciones de su menú (seguir héroes) se completan en la parte 2.
 
 **Registrar fanático.** Se validan los datos en este orden; la primera regla que falla produce el error:
 
 1. Ningún campo de texto puede ser `null`, vacío o solo espacios → `IllegalArgumentException`: _"Los campos no pueden estar vacíos o ser null"_.
 2. El nombre de usuario tiene entre 8 y 10 caracteres y solo contiene letras (mayúsculas o minúsculas), números o los caracteres `_` y `-` → `IllegalArgumentException`: _"El nombre de usuario debe tener entre 8 y 10 caracteres y debe contener solo letras (mayúsculas o minúsculas), números o los caracteres '_' y '-'"_.
-3. El nombre de usuario no existe todavía → `AlreadyExistException`: _"El fanático con nombre de usuario ${username} ya existe"_.
+3. El nombre de usuario no existe todavía (comparación exacta) → `AlreadyExistException`: _"El fanático con nombre de usuario ${username} ya existe"_.
 4. La contraseña tiene mínimo 8 caracteres, una mayúscula, una minúscula, un número y un carácter especial de este conjunto: `#?!@$%^&*-` → `IllegalArgumentException`: _"La contraseña debe tener mínimo 8 caracteres, una mayúscula, una minúscula, un número y un carácter especial (#?!@$%^&*-)"_.
 5. La edad es **mayor** a 14 años (14 no se acepta) → `IllegalArgumentException`: _"La edad debe ser mayor a 14 años"_.
 
@@ -56,14 +59,23 @@ El fanático es un **espectador** de la agencia: no crea equipos ni gestiona nad
 
 ### Módulo del fanático: seguir héroes
 
-Con la sesión iniciada, el menú del fanático ofrece:
+Con la sesión iniciada, el menú del fanático es exactamente este:
 
-1. **Seguir a un héroe.**
+```
+1. Seguir a un héroe.
+2. Dejar de seguir a un héroe.
+3. Ver los héroes que sigo.
+0. Cerrar sesión.
+```
+
+Sus opciones:
+
+1. **Seguir a un héroe.** El sistema muestra primero la lista de héroes.
     - Si el id no existe → `NotFoundException`: _"El héroe con id ${id} no existe"_.
     - Si ya lo sigue → `AlreadyExistException`: _"El fanático ya sigue al héroe ${name}"_.
 2. **Dejar de seguir a un héroe.** El sistema muestra primero los héroes que sigue. Si el id no está en su lista → `NotFoundException`: _"El héroe con id ${id} no existe en la lista de héroes seguidos del fanático"_.
 3. **Ver los héroes que sigue.**
-4. **Cerrar sesión.**
+0. **Cerrar sesión.** Vuelve al menú principal.
 
 El fanático no consulta equipos ni misiones: en esta iteración las misiones todavía no se despachan.
 
@@ -80,7 +92,7 @@ Desde el código base, cada héroe tiene experiencia (`experience`) y estado (`s
 
 Reglas de los héroes:
 
-- **Registrar héroe.** Se validan los datos en este orden:
+- **Registrar héroe.** El poder principal y la ciudad de origen no se validan en esta iteración. Se validan los datos en este orden:
     1. Nombre vacío o `null` → `IllegalArgumentException`: _"El nombre del héroe no puede estar vacío o ser null"_.
     2. Alguna de las cinco estadísticas fuera de 1 a 10 → `IllegalArgumentException`: _"Las estadísticas deben estar entre 1 y 10"_.
     3. Experiencia negativa → `IllegalArgumentException`: _"La experiencia no puede ser negativa"_.
@@ -113,7 +125,7 @@ Reglas de los héroes:
 **Consulta a la Agencia Central.** Con los datos válidos, antes de registrar la misión:
 
 - El sistema consulta con la librería `hero-intel` el nivel de amenaza oficial de la ciudad de la misión y **lo muestra** (un número entre 1 y 10).
-- Si el nivel que digitó el administrador **difiere del oficial en 4 o más niveles** (en cualquier sentido, por ejemplo oficial 9 y digitado 5, u oficial 3 y digitado 8), el sistema le advierte que se aleja del informe oficial y le pide confirmar. Si no confirma, la misión no se registra.
+- Si el nivel que digitó el administrador **difiere del oficial en 4 o más niveles** (en cualquier sentido, por ejemplo oficial 9 y digitado 5, u oficial 3 y digitado 8), el sistema le advierte que se aleja del informe oficial y le pide confirmar. Confirmar es digitar `s` (en mayúscula o minúscula); cualquier otra respuesta cancela y la misión no se registra. Los textos del nivel oficial, de la advertencia y de la pregunta son libres; solo el mensaje _"No se pudo consultar el informe de la Agencia Central"_ debe ser exacto.
 - Si la librería lanza `IntelAccessException` (token no configurado o inválido, ciudad desconocida o Agencia Central no disponible), el programa **no termina**: captura la excepción, muestra _"No se pudo consultar el informe de la Agencia Central"_ y **registra la misión igual**. El informe es una ayuda, no un requisito.
 - Cada equipo recibe, junto con su token, la **ciudad asignada a su equipo**. Su equipo **no puede consultar otra ciudad**: para cualquier otra, la Agencia responde que no la reconoce y el programa muestra el mensaje de arriba. Para ver el flujo completo (nivel oficial, advertencia y confirmación), registren la misión en la ciudad asignada a su equipo, escrita exactamente como la recibieron (las tildes cuentan).
 - El token nunca se escribe en el código: la librería lo lee de la variable de entorno `HERO_INTEL_TOKEN`.
@@ -138,7 +150,7 @@ Cada parte se califica sobre 5.0 y se **verifica en persona, en clase**, con el 
 | El paquete `exception` existe y la lógica lanza mientras la vista captura | 1.0 |
 | Inicio y cierre de sesión del fanático, con su mensaje de error | 1.5 |
 | Registro de fanáticos con sus validaciones y mensajes exactos | 2.0 |
-| Un dato inválido (id vacío o mal escrito, letras en la edad o en una opción del menú) no termina el programa en el registro ni en el inicio de sesión | 0.5 |
+| Un dato inválido (letras en la edad o en una opción del menú, campos vacíos) no termina el programa en el registro ni en el inicio de sesión | 0.5 |
 
 **Parte 2 - En casa, miércoles de la semana 13 (0.5 puntos de la nota del proyecto):**
 
