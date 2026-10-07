@@ -6,7 +6,7 @@ Este documento es el enunciado detallado de la iteración 3. La [hoja de ruta de
 
 1. [Qué cambia respecto a la iteración 2](#qué-cambia-respecto-a-la-iteración-2)
 2. [Reglas generales](#reglas-generales)
-3. [Parte 1 - Taller en clase (semana 12): excepciones y registro de fanáticos](#parte-1---taller-en-clase-semana-12-excepciones-y-registro-de-fanáticos)
+3. [Parte 1 - Taller en clase (semana 12): excepciones, registro de fanáticos y misiones](#parte-1---taller-en-clase-semana-12-excepciones-registro-de-fanáticos-y-misiones)
 4. [Parte 2 - En casa (semana 13): módulo del fanático, administrador y Agencia Central](#parte-2---en-casa-semana-13-módulo-del-fanático-administrador-y-agencia-central)
 5. [Entrega y calificación](#entrega-y-calificación)
 6. [Qué debe incluir la propuesta del lunes](#qué-debe-incluir-la-propuesta-del-lunes)
@@ -39,19 +39,23 @@ Antes de empezar, configuren la librería y su token siguiendo la sección [La l
 8. **Contraseñas.** La contraseña de un fanático no aparece en ninguna lista ni en ningún mensaje.
 9. El menú principal queda así: `1. Módulo administrador`, `2. Módulo fanático`, `0. Salir`.
 
-## Parte 1 - Taller en clase (semana 12): excepciones y registro de fanáticos
+## Parte 1 - Taller en clase (semana 12): excepciones, registro de fanáticos y misiones
 
-El taller trabaja sobre un flujo que ya existe: el **registro de fanáticos** del módulo del administrador (opción 5). Aquí se crean las excepciones propias y se aplican las dos primeras validaciones; el resto del registro se completa en casa (parte 2).
+El taller trabaja sobre flujos que ya existen en el módulo del administrador. Aquí se crean las excepciones propias y se aplican en dos lugares: el **registro de fanáticos** (opción 5) y la **gestión de misiones** (opciones 4, 11 y 12). Con ese patrón aprendido, en casa lo repiten con héroes y equipos.
 
 **En el taller:**
 
 1. Crear el paquete `exception` con `NotFoundException` y `AlreadyExistException` (regla general 1). La lógica lanza y la vista captura (regla general 2).
-2. Aplicar estas dos validaciones del **registro de fanático**, en este orden; la primera que falla produce el error:
+2. **Registro de fanático** (opción 5). Se aplican estas dos validaciones, en este orden; la primera que falla produce el error:
     1. Ningún campo de texto puede ser `null`, vacío o solo espacios → `IllegalArgumentException`: _"Los campos no pueden estar vacíos o ser null"_.
     2. El nombre de usuario no existe todavía → `AlreadyExistException`: _"El fanático con nombre de usuario ${username} ya existe"_.
-3. Que una entrada que no es número (la edad o una opción del menú) no termine el programa (regla general 5).
+3. **Misiones** (opciones 4, 11 y 12), con la validación de ids de la regla general 4 (los mensajes del id de la misión y del equipo):
+    - **Retirar misión.** Si el id no existe → `NotFoundException`: _"La misión con id ${id} no existe"_.
+    - **Asignar el equipo a una misión.** Misión inexistente → `NotFoundException`: _"La misión con id ${id} no existe"_. Equipo inexistente → `NotFoundException`: _"El equipo con id ${id} no existe"_. Equipo ya asignado a una misión → `AlreadyExistException`: _"El equipo ${teamName} ya está asignado a la misión ${codeName}"_ (`${codeName}` es la misión en la que ya está asignado).
+    - **Retirar el equipo de una misión** que no tiene equipo → `NotFoundException`: _"La misión ${codeName} no tiene equipo asignado"_.
+4. Que una entrada que no es número (la edad o una opción del menú) no termine el programa (regla general 5).
 
-Las demás reglas del registro (formato del usuario, contraseña y edad) y el inicio de sesión se hacen en casa. Cuando las agreguen, el orden completo de validación es el de la sección [Registrar fanático](#registrar-fanático) de la parte 2.
+Las demás reglas del registro de fanático (formato del usuario, contraseña y edad), el registro de misiones, el inicio de sesión y todo lo de héroes y equipos se hacen en casa (parte 2). Cuando agreguen las reglas que faltan del registro, el orden completo de validación es el de la sección [Registrar fanático](#registrar-fanático) de la parte 2.
 
 ## Parte 2 - En casa (semana 13): módulo del fanático, administrador y Agencia Central
 
@@ -143,9 +147,9 @@ Reglas de los héroes:
 - Cada equipo recibe, junto con su token, la **ciudad asignada a su equipo**. Su equipo **no puede consultar otra ciudad**: para cualquier otra, la Agencia responde que no la reconoce y el programa muestra el mensaje de arriba. Para ver el flujo completo (el nivel oficial guardado en la misión), registren la misión en la ciudad asignada a su equipo, escrita exactamente como la recibieron (las tildes cuentan).
 - El token nunca se escribe en el código: la librería lo lee de la variable de entorno `HERO_INTEL_TOKEN`.
 
-**Retirar misión.** Si el id no existe → `NotFoundException`: _"La misión con id ${id} no existe"_.
+**Retirar misión.** Si el id no existe → `NotFoundException`: _"La misión con id ${id} no existe"_. *(Se hace en el taller.)*
 
-**Asignar o retirar el equipo de una misión.**
+**Asignar o retirar el equipo de una misión.** *(Se hace en el taller.)*
 
 - Misión inexistente → `NotFoundException`: _"La misión con id ${id} no existe"_.
 - Equipo inexistente → `NotFoundException`: _"El equipo con id ${id} no existe"_.
@@ -160,10 +164,12 @@ Cada parte se califica sobre 5.0 y se **verifica en persona, en clase**, con el 
 
 | Criterio | Puntos |
 |----------|--------|
-| El paquete `exception` existe, la lógica lanza y la vista captura sin terminar el programa | 1.5 |
-| Registro de fanático: campos vacíos o `null`, con el mensaje exacto | 1.5 |
-| Registro de fanático: nombre de usuario repetido, con el mensaje exacto | 1.5 |
-| Letras en la edad o en una opción del menú no terminan el programa | 0.5 |
+| El paquete `exception` existe, la lógica lanza y la vista captura sin terminar el programa | 1.0 |
+| Registro de fanático: campos vacíos o `null`, con el mensaje exacto | 1.0 |
+| Registro de fanático: nombre de usuario repetido, con el mensaje exacto | 1.0 |
+| Retirar misión, con validación del id y mensajes exactos | 0.75 |
+| Asignar y retirar el equipo de una misión, con sus tres excepciones y mensajes exactos | 1.0 |
+| Letras en la edad o en una opción del menú no terminan el programa | 0.25 |
 
 **Parte 2 - En casa, miércoles de la semana 13 (0.5 puntos de la nota del proyecto):**
 
@@ -172,7 +178,7 @@ Cada parte se califica sobre 5.0 y se **verifica en persona, en clase**, con el 
 | Resto del registro de fanático (formato del usuario, contraseña y edad) con mensajes exactos | 0.75 |
 | Inicio y cierre de sesión del fanático, con su mensaje de error | 0.75 |
 | Seguir y dejar de seguir héroes y ver los que sigue, con excepciones y mensajes exactos | 0.75 |
-| Eliminación de fanáticos y excepciones del resto del módulo del administrador (héroes, equipos, misiones) con mensajes exactos | 0.75 |
+| Eliminación de fanáticos y excepciones del resto del módulo del administrador (héroes, equipos y registro de misiones) con mensajes exactos | 0.75 |
 | `getLevel()`, `getRank()` y la regla del veterano en los equipos | 0.75 |
 | Consulta a la Agencia Central en una sola capa: muestra y guarda el nivel oficial en la misión, y si la Agencia no responde pide el nivel a mano y sigue funcionando; el token sale de `HERO_INTEL_TOKEN` | 0.75 |
 | Entradas inválidas (letras en campos numéricos, ids mal escritos) no terminan el programa en ningún módulo | 0.5 |
