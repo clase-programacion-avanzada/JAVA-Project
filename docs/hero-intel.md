@@ -40,12 +40,24 @@ El token funciona como una contraseña:
 - No se sube a Git, incluso si el repositorio es privado.
 - Expira al terminar el curso y el profesor puede revocarlo o rotarlo.
 
-La librería lee `HERO_INTEL_TOKEN` y envía internamente el encabezado `Authorization: Bearer <token>` exclusivamente mediante HTTPS. El programa del estudiante nunca recibe ni pasa el token como argumento.
+La librería lee `HERO_INTEL_TOKEN` del archivo `.env` del proyecto (o de un directorio padre) y, si no está, de la variable de entorno; luego envía internamente el encabezado `Authorization: Bearer <token>` exclusivamente mediante HTTPS. El programa del estudiante nunca recibe ni pasa el token como argumento.
 
 > [!IMPORTANT]
 > Quien posea el token puede usar la identidad del equipo. Si sospecha una filtración, informe inmediatamente al profesor para revocarlo y recibir uno nuevo.
 
 ## Configurar el token
+
+### Archivo `.env` (recomendado)
+
+Cree un archivo `.env` en la **raíz del proyecto** (al mismo nivel de `build.gradle`) con una sola línea:
+
+```dotenv
+HERO_INTEL_TOKEN=token-entregado-por-el-profesor
+```
+
+- La librería lo busca en el directorio desde el que corre el programa y en sus directorios padre.
+- El `.env` **tiene prioridad** sobre la variable de entorno.
+- Agregue `.env` a `.gitignore`: **nunca** suba el token a Git, ni siquiera en un repositorio privado.
 
 ### Windows
 
@@ -96,7 +108,7 @@ for (VillainIntel villain : intel.getVillainActivity("Metrópolis")) {
 
 | Método | Retorna | Descripción |
 |--------|---------|-------------|
-| `IntelService.create()` | `IntelService` | Lee `HERO_INTEL_TOKEN`. Falla si está ausente, vacío, vencido o revocado. |
+| `IntelService.create()` | `IntelService` | Lee `HERO_INTEL_TOKEN` del `.env` o del entorno. Falla si no está configurado, vencido o revocado. |
 | `getCityThreatLevel(String city)` | `int` | Amenaza oficial base de la ciudad, entre 1 y 10. |
 | `getVillainActivity(String city)` | `List<VillainIntel>` | Villanos activos para el equipo en esa ciudad. Los capturados dejan de aparecer. |
 
@@ -111,7 +123,7 @@ Los UUID de villano son estables. El mismo villano conserva su identidad entre c
 ## API 1.2.0: despacho y simulación de misiones
 
 > [!NOTE]
-> **Disponible desde la iteración 5 (semana 16).** Esta sección describe `hero-intel-1.2.0.jar`, que se publica como un nuevo Release del repositorio. Para la iteración 3 basta la versión 1.1.0 y `getCityThreatLevel`. Los villanos y la sinergia entre héroes los maneja la Agencia Central: el proyecto no los modela.
+> **Disponible desde la iteración 5 (semana 16).** Esta sección describe `hero-intel-1.2.1.jar`, que se publica como un nuevo Release del repositorio. Para la iteración 3 basta la versión 1.1.0 y `getCityThreatLevel`. Los villanos y la sinergia entre héroes los maneja la Agencia Central: el proyecto no los modela.
 
 ### Perfiles
 
@@ -252,7 +264,7 @@ La librería valida los datos localmente y no gasta una llamada de red si algo e
 
 | Mensaje | Causa |
 |---------|-------|
-| `La variable de entorno HERO_INTEL_TOKEN no está configurada...` | Falta el token; configúrelo y reinicie el IDE |
+| `No se encontró el token del equipo...` | Falta el token (ni en `.env` ni en el entorno); configúrelo y reinicie el IDE |
 | `La ciudad no puede estar vacía` | Ciudad nula, vacía o en blanco |
 | `El escuadrón debe tener entre 1 y 8 héroes` | Escuadrón vacío o de más de 8 |
 | `El escuadrón repite al héroe <uuid>` | El mismo UUID aparece dos veces |
@@ -277,8 +289,8 @@ La librería valida los datos localmente y no gasta una llamada de red si algo e
 ## Reglas de seguridad
 
 1. Use únicamente la librería. No haga peticiones HTTP a la Agencia Central ni intente averiguar su dirección.
-2. No escriba el token en el código, en archivos de configuración del proyecto, en capturas de pantalla ni en la entrega.
-3. No suba el token a Git, aunque el repositorio sea privado. Agregue a `.gitignore` cualquier archivo local donde lo guarde.
+2. No escriba el token en el código, en capturas de pantalla ni en la entrega. Si lo guarda en un archivo (por ejemplo `.env`), ese archivo debe estar en `.gitignore`.
+3. No suba el token a Git, aunque el repositorio sea privado. Agregue `.env` (y cualquier archivo local donde lo guarde) a `.gitignore`.
 4. No incluya el token en URLs, parámetros, logs ni mensajes de error. La librería nunca lo expone de vuelta.
 5. No comparta el token con otros equipos ni use el de otro equipo. Cada mundo de juego está aislado por token.
 6. Informe de inmediato al profesor si sospecha que el token se filtró, para revocarlo y emitir uno nuevo.
