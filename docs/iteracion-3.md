@@ -23,21 +23,21 @@ Antes de empezar, configuren la librería y su token siguiendo la sección [La l
 
 ## Reglas generales
 
-1. Crean el paquete `exception` con dos excepciones propias, ambas **verificadas** (extienden `Exception`): `NotFoundException` (algo no existe) y `AlreadyExistException` (algo ya existe). Los datos inválidos usan `IllegalArgumentException` de Java.
+1. Si se va a crear una nueva excepción, debe estar en el paquete `exception`. Su equipo debe determinar si será una *checked o unchecked exception*.
 2. **La lógica lanza la excepción y la vista la captura**, muestra su mensaje y vuelve al menú. Ninguna excepción esperada puede terminar el programa.
 3. Los mensajes se muestran **exactamente** como aparecen en este documento. Donde dice `${id}`, `${name}`, `${username}`, `${teamName}` o `${codeName}` se reemplaza por el valor real.
 4. **Identificadores.** Todo id que digite el usuario se valida antes de buscarlo:
-    - Vacío o `null` → `IllegalArgumentException` con el mensaje que corresponda:
+    - Vacío o `null` → Lanza una excepción con el mensaje que corresponda:
         - _"El id del fanático no puede estar vacío o ser null"_
         - _"El id del héroe no puede estar vacío o ser null"_
         - _"El id del equipo no puede estar vacío o ser null"_
         - _"El id de la misión no puede estar vacío o ser null"_
-    - Con formato inválido (no es un UUID) → `IllegalArgumentException`: _"El id ${id} no tiene un formato válido"_.
-5. **Números.** Si el usuario digita letras donde se espera un número (una opción del menú, la edad, las cinco estadísticas y la experiencia de un héroe, la duración y, cuando la Agencia no responde, el nivel de amenaza), el programa no termina: muestra un mensaje y vuelve a pedir el dato.
+    - Con formato inválido (no es un UUID) : _"El id ${id} no tiene un formato válido"_.
+5. **Números.** Si el usuario digita letras donde se espera un número (una opción del menú, la edad, las cinco estadísticas y la experiencia de un héroe, la duración y, cuando la Agencia no responde, el nivel de amenaza), el programa no termina: muestra un mensaje y vuelve a pedir el dato. En el menú, normalmente hay unos métodos auxiliares para tomar los datos, probablemente este sea el lugar para capturar la excepción.
 6. **Espacios y mayúsculas.** Antes de validar y de comparar, a todo texto digitado se le quitan los espacios del inicio y del final. Los nombres de usuario se comparan **exactamente** (las mayúsculas cuentan, igual que en el inicio de sesión); los nombres de héroes y de equipos se comparan **sin distinguir mayúsculas de minúsculas**.
 7. **Listas.** Antes de pedir un id se muestra la lista de donde se elige. Si una lista está vacía se muestra _"No hay elementos."_ (el código base ya lo hace).
-8. **Contraseñas.** La contraseña de un fanático no aparece en ninguna lista ni en ningún mensaje.
-9. El menú principal queda así: `1. Módulo administrador`, `2. Módulo fanático`, `0. Salir`.
+8. **Contraseñas.** La contraseña de un fanático no aparece en ninguna lista ni en ningún mensaje. (Puede mostrar asteriscos o un mensaje indicando que la contraseña está oculta)
+9. El menú principal puede quedar así: `1. Módulo administrador`, `2. Módulo fanático`, `0. Salir`. O propongan una forma distinta, si así lo desean, pero debe quedar separada la parte de administrador, de la parte del fanático.
 
 ## Parte 1 - Taller en clase (semana 12): excepciones, registro de fanáticos y misiones
 
@@ -45,15 +45,14 @@ El taller trabaja sobre flujos que ya existen en el módulo del administrador. A
 
 **En el taller:**
 
-1. Crear el paquete `exception` con `NotFoundException` y `AlreadyExistException` (regla general 1). La lógica lanza y la vista captura (regla general 2).
-2. **Registro de fanático** (opción 5). Se aplican estas dos validaciones, en este orden; la primera que falla produce el error:
-    1. Ningún campo de texto puede ser `null`, vacío o solo espacios → `IllegalArgumentException`: _"Los campos no pueden estar vacíos o ser null"_.
-    2. El nombre de usuario no existe todavía → `AlreadyExistException`: _"El fanático con nombre de usuario ${username} ya existe"_.
-3. **Misiones** (opciones 4, 11 y 12), con la validación de ids de la regla general 4 (los mensajes del id de la misión y del equipo):
-    - **Retirar misión.** Si el id no existe → `NotFoundException`: _"La misión con id ${id} no existe"_.
-    - **Asignar el equipo a una misión.** Misión inexistente → `NotFoundException`: _"La misión con id ${id} no existe"_. Equipo inexistente → `NotFoundException`: _"El equipo con id ${id} no existe"_. Equipo ya asignado a una misión → `AlreadyExistException`: _"El equipo ${teamName} ya está asignado a la misión ${codeName}"_ (`${codeName}` es la misión en la que ya está asignado).
-    - **Retirar el equipo de una misión** que no tiene equipo → `NotFoundException`: _"La misión ${codeName} no tiene equipo asignado"_.
-4. Que una entrada que no es número (la edad o una opción del menú) no termine el programa (regla general 5).
+1. **Registro de fanático** (opción 5). Se aplican estas dos validaciones, en este orden; la primera que falla produce el error:
+    1. Ningún campo de texto puede ser `null`, vacío o solo espacios: _"Los campos no pueden estar vacíos o ser null"_.
+    2. El nombre de usuario no existe todavía: _"El fanático con nombre de usuario ${username} ya existe"_.
+2. **Misiones** (opciones 4, 11 y 12), con la validación de ids de la regla general 4 (los mensajes del id de la misión y del equipo):
+    - **Retirar misión.** Si el id no existe: _"La misión con id ${id} no existe"_.
+    - **Asignar el equipo a una misión.** Misión inexistente: _"La misión con id ${id} no existe"_. Equipo inexistente: _"El equipo con id ${id} no existe"_. Equipo ya asignado a una misión: _"El equipo ${teamName} ya está asignado a la misión ${codeName}"_ (`${codeName}` es la misión en la que ya está asignado).
+    - **Retirar el equipo de una misión** que no tiene equipo: _"La misión ${codeName} no tiene equipo asignado"_.
+3. Que una entrada que no es número (la edad o una opción del menú) no termine el programa (regla general 5).
 
 Las demás reglas del registro de fanático (formato del usuario, contraseña y edad), el registro de misiones, el inicio de sesión y todo lo de héroes y equipos se hacen en casa (parte 2). Cuando agreguen las reglas que faltan del registro, el orden completo de validación es el de la sección [Registrar fanático](#registrar-fanático) de la parte 2 (la comprobación del usuario repetido pasa al final).
 
@@ -63,11 +62,11 @@ Las demás reglas del registro de fanático (formato del usuario, contraseña y 
 
 Se validan los datos en este orden; la primera regla que falla produce el error. Las reglas 1 y 5 se hicieron en el taller (en el taller, la 5 va justo después de la 1):
 
-1. Ningún campo de texto puede ser `null`, vacío o solo espacios → `IllegalArgumentException`: _"Los campos no pueden estar vacíos o ser null"_.
-2. El nombre de usuario tiene entre 8 y 10 caracteres y solo contiene letras (mayúsculas o minúsculas), números o los caracteres `_` y `-` → `IllegalArgumentException`: _"El nombre de usuario debe tener entre 8 y 10 caracteres y debe contener solo letras (mayúsculas o minúsculas), números o los caracteres '_' y '-'"_.
-3. La contraseña tiene mínimo 8 caracteres, una mayúscula, una minúscula, un número y un carácter especial de este conjunto: `#?!@$%^&*-` → `IllegalArgumentException`: _"La contraseña debe tener mínimo 8 caracteres, una mayúscula, una minúscula, un número y un carácter especial (#?!@$%^&*-)"_.
-4. La edad es **mayor** a 14 años (14 no se acepta) → `IllegalArgumentException`: _"La edad debe ser mayor a 14 años"_.
-5. El nombre de usuario no existe todavía (comparación exacta) → `AlreadyExistException`: _"El fanático con nombre de usuario ${username} ya existe"_.
+1. Ningún campo de texto puede ser `null`, vacío o solo espacios: _"Los campos no pueden estar vacíos o ser null"_.
+2. El nombre de usuario tiene entre 8 y 10 caracteres y solo contiene letras (mayúsculas o minúsculas), números o los caracteres `_` y `-`: _"El nombre de usuario debe tener entre 8 y 10 caracteres y debe contener solo letras (mayúsculas o minúsculas), números o los caracteres '_' y '-'"_.
+3. La contraseña tiene mínimo 8 caracteres, una mayúscula, una minúscula, un número y un carácter especial de este conjunto: `#?!@$%&*-`: _"La contraseña debe tener mínimo 8 caracteres, una mayúscula, una minúscula, un número y un carácter especial (#?!@$%^&*-)"_.
+4. La edad es **mayor** a 14 años (14 no se acepta): _"La edad debe ser mayor a 14 años"_.
+5. El nombre de usuario no existe todavía (comparación exacta): _"El fanático con nombre de usuario ${username} ya existe"_.
 
 Primero se comprueba la forma de los datos y al final si el usuario ya existe.
 
@@ -91,9 +90,9 @@ Con la sesión iniciada, el menú del fanático es exactamente este:
 Sus opciones:
 
 1. **Seguir a un héroe.** El sistema muestra primero la lista de héroes.
-    - Si el id no existe → `NotFoundException`: _"El héroe con id ${id} no existe"_.
-    - Si ya lo sigue → `AlreadyExistException`: _"El fanático ya sigue al héroe ${name}"_.
-2. **Dejar de seguir a un héroe.** El sistema muestra primero los héroes que sigue. Si el id no está en su lista → `NotFoundException`: _"El héroe con id ${id} no existe en la lista de héroes seguidos del fanático"_.
+    - Si el id no existe: _"El héroe con id ${id} no existe"_.
+    - Si ya lo sigue: _"El fanático ya sigue al héroe ${name}"_.
+2. **Dejar de seguir a un héroe.** El sistema muestra primero los héroes que sigue. Si el id no está en su lista: _"El héroe con id ${id} no existe en la lista de héroes seguidos del fanático"_.
 3. **Ver los héroes que sigue.**
 0. **Cerrar sesión.** Vuelve al menú principal.
 
@@ -101,7 +100,7 @@ El fanático no consulta equipos ni misiones: en esta iteración las misiones to
 
 ### Eliminar fanáticos
 
-**Eliminar fanático.** Si el id no existe → `NotFoundException`: _"El fanático con id ${id} no existe"_.
+**Eliminar fanático.** Si el id no existe: _"El fanático con id ${id} no existe"_.
 
 ### Héroes
 
@@ -113,22 +112,22 @@ Desde el código base, cada héroe tiene experiencia (`experience`) y estado (`s
 Reglas de los héroes:
 
 - **Registrar héroe.** El poder principal y la ciudad de origen no se validan en esta iteración. Se validan los datos en este orden:
-    1. Nombre vacío o `null` → `IllegalArgumentException`: _"El nombre del héroe no puede estar vacío o ser null"_.
-    2. Alguna de las cinco estadísticas fuera de 1 a 10 → `IllegalArgumentException`: _"Las estadísticas deben estar entre 1 y 10"_.
-    3. Experiencia negativa → `IllegalArgumentException`: _"La experiencia no puede ser negativa"_.
-    4. Nombre repetido (sin distinguir mayúsculas de minúsculas) → `AlreadyExistException`: _"El héroe con nombre ${name} ya existe"_.
-- **Retirar héroe.** Si el id no existe → `NotFoundException`: _"El héroe con id ${id} no existe"_. Si se retira con éxito, siguen aplicando las reglas de la iteración 2 sobre equipos y fanáticos, junto con la regla del veterano de la sección siguiente.
+    1. Nombre vacío o `null` : _"El nombre del héroe no puede estar vacío o ser null"_.
+    2. Alguna de las cinco estadísticas fuera de 1 a 10: _"Las estadísticas deben estar entre 1 y 10"_.
+    3. Experiencia negativa : _"La experiencia no puede ser negativa"_.
+    4. Nombre repetido (sin distinguir mayúsculas de minúsculas): _"El héroe con nombre ${name} ya existe"_.
+- **Retirar héroe.** Si el id no existe: _"El héroe con id ${id} no existe"_. Si se retira con éxito, siguen aplicando las reglas de la iteración 2 sobre equipos y fanáticos, junto con la regla del veterano de la sección siguiente.
 
 ### Equipos
 
-- **Registrar equipo.** Nombre vacío o `null` → `IllegalArgumentException`: _"El nombre del equipo no puede estar vacío o ser null"_. Nombre repetido → `AlreadyExistException`: _"El equipo con nombre ${name} ya existe"_.
-- **Disolver equipo.** Si el id no existe → `NotFoundException`: _"El equipo con id ${id} no existe"_.
+- **Registrar equipo.** Nombre vacío o `null`: _"El nombre del equipo no puede estar vacío o ser null"_. Nombre repetido: _"El equipo con nombre ${name} ya existe"_.
+- **Disolver equipo.** Si el id no existe: _"El equipo con id ${id} no existe"_.
 - **Agregar o retirar héroes de un equipo.**
-    - Equipo inexistente → `NotFoundException`: _"El equipo con id ${id} no existe"_.
-    - Héroe inexistente → `NotFoundException`: _"El héroe con id ${id} no existe"_.
-    - Héroe que ya pertenece a un equipo → `AlreadyExistException`: _"El héroe ${name} ya está en el equipo ${teamName}"_. Cada héroe pertenece como máximo a un equipo, así que esto aplica tanto si intentan agregarlo otra vez al mismo equipo como si intentan agregarlo a uno distinto; `${teamName}` es el equipo al que ya pertenece.
-    - Retirar un héroe que no está en el equipo → `NotFoundException`: _"El héroe con id ${id} no existe en el equipo ${teamName}"_.
-- **Regla del veterano.** Un equipo con integrantes debe tener siempre al menos un héroe de rango `veteran` o superior (`veteran` o `elite`). Un equipo vacío es válido. La regla se revisa en cada cambio, después de las demás validaciones, y si no se cumple → `IllegalArgumentException`: _"El equipo ${teamName} necesita al menos un héroe de rango veterano o superior"_:
+    - Equipo inexistente: _"El equipo con id ${id} no existe"_.
+    - Héroe inexistente: _"El héroe con id ${id} no existe"_.
+    - Héroe que ya pertenece a un equipo: _"El héroe ${name} ya está en el equipo ${teamName}"_. Cada héroe pertenece como máximo a un equipo, así que esto aplica tanto si intentan agregarlo otra vez al mismo equipo como si intentan agregarlo a uno distinto; `${teamName}` es el equipo al que ya pertenece.
+    - Retirar un héroe que no está en el equipo: _"El héroe con id ${id} no existe en el equipo ${teamName}"_.
+- **Regla del veterano.** Un equipo con integrantes debe tener siempre al menos un héroe de rango `veteran` o superior (`veteran` o `elite`). Un equipo vacío es válido. La regla se revisa en cada cambio, después de las demás validaciones, y si no se cumple: _"El equipo ${teamName} necesita al menos un héroe de rango veterano o superior"_:
     - Agregar un héroe a un equipo vacío: el primero debe ser veterano o superior.
     - Retirar de un equipo al único veterano mientras quedan otros integrantes.
     - Retirar de la base de datos a un héroe que es el único veterano de un equipo con más integrantes (el héroe no se retira).
@@ -138,25 +137,25 @@ Reglas de los héroes:
 
 **Registrar misión.** Se piden el nombre clave, la duración en horas y la ciudad; **el nivel de amenaza no se pide al administrador**. Se validan los datos en este orden:
 
-1. Los campos de texto no pueden estar vacíos ni ser `null` → `IllegalArgumentException`: _"Los campos no pueden estar vacíos o ser null"_.
-2. La duración no es menor a 0 (0 es válido) → `IllegalArgumentException`: _"La duración de la misión no puede ser menor a 0"_.
+1. Los campos de texto no pueden estar vacíos ni ser `null`: _"Los campos no pueden estar vacíos o ser null"_.
+2. La duración no es menor a 0 (0 es válido): _"La duración de la misión no puede ser menor a 0"_.
 
 **Nivel de amenaza desde la Agencia Central.** Con los datos válidos, antes de registrar la misión:
 
 - El sistema consulta con la librería `hero-intel` el nivel de amenaza oficial de la ciudad de la misión, **lo muestra** (un número entre 1 y 10) y **lo guarda como nivel de amenaza de la misión**.
-- Si la librería lanza `IntelAccessException` (token no configurado o inválido, ciudad desconocida o Agencia Central no disponible), el programa **no termina**: captura la excepción, muestra _"No se pudo consultar el informe de la Agencia Central"_ y **le pide el nivel de amenaza al administrador**. Ese nivel debe estar entre 1 y 10 → `IllegalArgumentException`: _"El nivel de amenaza debe estar entre 1 y 10"_ (la misión no se registra). Con un nivel válido, la misión se registra igual. El informe es una ayuda, no un requisito.
+- Si la librería lanza `IntelAccessException` (token no configurado o inválido, ciudad desconocida o Agencia Central no disponible), el programa **no termina**: captura la excepción, muestra _"No se pudo consultar el informe de la Agencia Central"_ y **le pide el nivel de amenaza al administrador**. Ese nivel debe estar entre 1 y 10: _"El nivel de amenaza debe estar entre 1 y 10"_ (la misión no se registra). Con un nivel válido, la misión se registra igual. El informe es una ayuda, no un requisito.
 - Los textos con los que se muestra el nivel oficial y se pide el nivel a mano son libres; solo el mensaje _"No se pudo consultar el informe de la Agencia Central"_ debe ser exacto.
 - Cada equipo recibe, junto con su token, la **ciudad asignada a su equipo**. Su equipo **no puede consultar otra ciudad**: para cualquier otra, la Agencia responde que no la reconoce y el programa muestra el mensaje de arriba. Para ver el flujo completo (el nivel oficial guardado en la misión), registren la misión en la ciudad asignada a su equipo, escrita exactamente como la recibieron (las tildes cuentan).
 - El token nunca se escribe en el código: la librería lo lee de la variable de entorno `HERO_INTEL_TOKEN`.
 
-**Retirar misión.** Si el id no existe → `NotFoundException`: _"La misión con id ${id} no existe"_. *(Se hace en el taller.)*
+**Retirar misión.** Si el id no existe`: _"La misión con id ${id} no existe"_. *(Se hace en el taller.)*
 
 **Asignar o retirar el equipo de una misión.** *(Se hace en el taller.)*
 
-- Misión inexistente → `NotFoundException`: _"La misión con id ${id} no existe"_.
-- Equipo inexistente → `NotFoundException`: _"El equipo con id ${id} no existe"_.
-- Equipo ya asignado a una misión → `AlreadyExistException`: _"El equipo ${teamName} ya está asignado a la misión ${codeName}"_ (`${codeName}` es la misión en la que ya está asignado).
-- Retirar el equipo de una misión que no tiene equipo → `NotFoundException`: _"La misión ${codeName} no tiene equipo asignado"_.
+- Misión inexistente: _"La misión con id ${id} no existe"_.
+- Equipo inexistente: _"El equipo con id ${id} no existe"_.
+- Equipo ya asignado a una misión: _"El equipo ${teamName} ya está asignado a la misión ${codeName}"_ (`${codeName}` es la misión en la que ya está asignado).
+- Retirar el equipo de una misión que no tiene equipo: _"La misión ${codeName} no tiene equipo asignado"_.
 
 ## Entrega y calificación
 
@@ -185,8 +184,7 @@ Cada parte se califica sobre 5.0 y se **verifica en persona, en clase**, con el 
 | Consulta a la Agencia Central en una sola capa: muestra y guarda el nivel oficial en la misión, y si la Agencia no responde pide el nivel a mano y sigue funcionando; el token sale de `HERO_INTEL_TOKEN` | 0.75 |
 | Entradas inválidas (letras en campos numéricos, ids mal escritos) no terminan el programa en ningún módulo | 0.5 |
 
-## Qué debe incluir la propuesta del lunes
-
+## Qué deben pensar antes de escribir una sola línea de código
 Una propuesta corta, de alto nivel, con:
 
 - La lista de excepciones propias, en qué paquete viven y por qué son verificadas.
@@ -196,4 +194,7 @@ Una propuesta corta, de alto nivel, con:
 - Cómo evitan que una entrada inválida termine el programa.
 - Dónde viven el nivel, el rango y la regla del veterano, y qué cambios de equipo la disparan.
 - En qué capa usan la librería `hero-intel` y en qué momento la crean (si la crean al arrancar el programa y no hay token, el programa no arranca).
-- El diagrama de clases actualizado.
+
+## Si llegaste a leer hasta acá, hay una pequeña ayuda
+
+- Si quieren agilizar su trabajo, el lunes de la semana 13 le pueden presentar al profesor una parte de la implementación de temas repetitivos (el profesor le dará feedback) y ejecutará un código que le permitirá implementar los cambios automáticamente, con ayuda de un agente. Esto les permitirá centrarse en la lógica específica de su proyecto sin preocuparse por los detalles repetitivos.
