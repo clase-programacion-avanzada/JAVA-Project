@@ -49,7 +49,13 @@ La librería lee `HERO_INTEL_TOKEN` del archivo `.env` del proyecto (o de un dir
 
 ### Archivo `.env` (recomendado)
 
-Cree un archivo `.env` en la **raíz del proyecto** (al mismo nivel de `build.gradle`) con una sola línea:
+El repositorio trae un ejemplo. Cópielo y pon el token que le entregó el profesor:
+
+```bash
+cp .env.example .env
+```
+
+Edite `.env` y deje solo la línea del token:
 
 ```dotenv
 HERO_INTEL_TOKEN=token-entregado-por-el-profesor
