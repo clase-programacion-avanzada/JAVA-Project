@@ -32,6 +32,10 @@ La versión 1.1.0 conserva las operaciones públicas de 1.0.0 y agrega el despac
 
 Cada equipo recibe por un canal privado un **token opaco, único, revocable y temporal**, junto con **la ciudad asignada a su equipo**. El servidor usa el token para autenticar al equipo y separar su mundo de juego: villanos activos, capturas y despachos. Las ciudades que consulte deben ser las de su equipo, escritas exactamente como se las entregaron (las tildes cuentan).
 
+> Si perdiste el correo con tu ciudad, no hace falta pedirlo: la Agencia Central te la dice.
+> `intel.getAssignedCity()` devuelve el nombre exacto de tu ciudad (con tildes y mayúsculas), el mismo
+> que tienes que escribir en `getCityThreatLevel(...)`.
+
 El token funciona como una contraseña:
 
 - Solo los integrantes del equipo deben conocerlo.
@@ -115,6 +119,7 @@ for (VillainIntel villain : intel.getVillainActivity("Metrópolis")) {
 | Método | Retorna | Descripción |
 |--------|---------|-------------|
 | `IntelService.create()` | `IntelService` | Lee `HERO_INTEL_TOKEN` del `.env` o del entorno. Falla si no está configurado, vencido o revocado. |
+| `getAssignedCity()` | `String` | La ciudad asignada a tu equipo, con el texto exacto (tildes y mayúsculas) para usarla en las consultas. Falla si tu equipo no tiene ciudad asignada. |
 | `getCityThreatLevel(String city)` | `int` | Amenaza oficial base de la ciudad, entre 1 y 10. |
 | `getVillainActivity(String city)` | `List<VillainIntel>` | Villanos activos para el equipo en esa ciudad. Los capturados dejan de aparecer. |
 
@@ -129,7 +134,7 @@ Los UUID de villano son estables. El mismo villano conserva su identidad entre c
 ## API 1.2.0: despacho y simulación de misiones
 
 > [!NOTE]
-> **Disponible desde la iteración 5 (semana 16).** Esta sección describe `hero-intel-1.2.1.jar`, que se publica como un nuevo Release del repositorio. Para la iteración 3 basta la versión 1.1.0 y `getCityThreatLevel`. Los villanos y la sinergia entre héroes los maneja la Agencia Central: el proyecto no los modela.
+> **Disponible desde la iteración 5 (semana 16).** Esta sección describe `hero-intel-1.3.0.jar`, que se publica como un nuevo Release del repositorio. Para la iteración 3 basta la versión 1.1.0 y `getCityThreatLevel`. Los villanos y la sinergia entre héroes los maneja la Agencia Central: el proyecto no los modela.
 
 ### Perfiles
 
